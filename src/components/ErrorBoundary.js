@@ -7,19 +7,27 @@ class ErrorBoundary extends React.Component {
     super(props);
     this.state = {
       error: null,
+      hasError: false,
     }
+  }
+
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-    this.setState(error)
+    // this.setState({error: error});
+    console.log("error", error);
   }
 
-  render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-    if (!this.state.error) {
-      return this.props.children;
-    } else {
+  render() {
+    if (this.state.hasError) {
       return <Error>Oops, something unexpected happened here</Error>
     }
+    return this.props.children;
+    // return <Error>Oops, something unexpected happened here</Error>
+
   }
 }
 

@@ -11,19 +11,35 @@ import Loading from '../../components/Loading';
 import Error from '../../components/Error';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import {useHistory} from 'react-router-dom';
+import moment from 'moment';
+import Logger from '../../util/Logger';
 
 function OrdersView(props) {
+  const logger = new Logger(OrdersView.name);
 
   const [orders, setOrders] = useState([]);
+  const [todaysOrders, setTodaysOrders] = useState([]);
+  const [historicOrders, setHistoricOrders] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const history = useHistory();
 
   useEffect(() => {
+    const currentDate = moment().date();
+
     setLoading(true);
+    setError(null);
     getOrders().
-        then(data => setOrders(data)).
+        then(data => {
+          setTodaysOrders(data.filter(d => {
+            const orderDate = moment(d.required_date).date();
+            logger.info("order date", orderDate);
+            logger.info("current date", currentDate);
+            return orderDate === currentDate;
+          }));
+          setHistoricOrders(data.filter(d => moment(d.required_date).date() !== currentDate));
+        }).
         catch(err => setError(err.message)).
         finally(() => setLoading(false));
   }, [null]);
@@ -40,8 +56,8 @@ function OrdersView(props) {
     } else {
       return (
           <Fragment>
-            <OrdersTodayView orders={orders}/>
-            <OrdersHistoryView orders={orders}/>
+            <OrdersTodayView orders={todaysOrders}/>
+            <OrdersHistoryView orders={historicOrders}/>
           </Fragment>
       );
     }

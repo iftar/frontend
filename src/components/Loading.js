@@ -4,6 +4,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faInfo} from '@fortawesome/free-solid-svg-icons';
 import {useInterval} from 'react-use';
 import LightText from './element-wrappers/LightText';
+import {Spinner} from 'react-bootstrap';
+import {COLOR_PRIMARY} from '../constants/theme';
 
 function Loading() {
   const DEFAULT_LOADING_TEXT = "Loading";
@@ -20,8 +22,8 @@ function Loading() {
 
   return (
       <Fragment>
-        <View style={{display: "flex", flex: 1, flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
-          <FontAwesomeIcon icon={faInfo}></FontAwesomeIcon>
+        <View style={{display: "flex", flex: 1, flexDirection: "column", alignItems: "center", justifyContent: "center", color:{COLOR_PRIMARY}}}>
+          <Spinner animation="border" variant={"primary"} />
           <LightText>{loadingText}</LightText>
         </View>
       </Fragment>

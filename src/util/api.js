@@ -3,9 +3,10 @@ import { getItem, saveItem } from './storage';
 import Order from '../models/Order';
 import User from '../models/User';
 import Logger from './Logger';
+import CollectionPoint from '../models/CollectionPoint';
 
 const BASE_URL = 'https://share-your-iftar-backend.herokuapp.com/api';
-const LOCATION_URL = "https://share-your-iftar-backend.herokuapp.com/api/collection-points";
+const LOCATION_URL = BASE_URL + "/collection-points";
 const ORDER_CHECK_URL = "https://share-your-iftar-backend.herokuapp.com//api/user/orders/check";
 
 const USER_TOKEN_KEY = 'userToken';
@@ -96,7 +97,7 @@ export async function getUserDetails() {
 // --------------------------
 // ORDER API FUNCTIONS
 
-export async function getOrders() {
+export async function getOrders() : Array<Order> {
   const token = getUserToken();
 
   let response;
@@ -138,20 +139,20 @@ export async function canUserPlaceOrder() {
   }
 }
 
-export async function getLocations() {
+export async function getCollectionPoints() {
   const token = getItem("userToken");
   let response;
   try {
-    response = await axios.get(`${LOCATION_URL}`, {
+    response = await axios.get(`${BASE_URL}/collection-points`, {
       headers: {
         Authorization: "Bearer " + token,
       },
     });
     const data = response.data;
     logger.info("data: ", data);
-    return Object.assign(new Location(), data);
+    return data.data.collection_points.data.map(d => Object.assign(new CollectionPoint(), d));
   } catch (error) {
-    logger.error("error: ", error.response);
-    throw new Error(error.response.data);
+    logger.error("error: ", error.message);
+    throw new Error(error.message);
   }
 }

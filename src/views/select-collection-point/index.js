@@ -1,10 +1,10 @@
 import React from 'react';
-import  Location  from './location';
+import  SelectLocationView  from './location';
 
 const SelectionLocation = () => {
   return (
     <div>
-      <Location />
+      <SelectLocationView />
     </div>
   )
 }

@@ -8,7 +8,7 @@ function CircleIcon(props) {
 
   return (
       <Fragment>
-        <View style={{borderRadius: "50%", height: "30px", width: "30px", display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: COLOR_PRIMARY, marginRight: "10px"}}>
+        <View style={{borderRadius: "50%", minHeight: "40px", minWidth: "40px", display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: COLOR_PRIMARY, marginRight: "10px"}}>
           <FontAwesomeIcon icon={icon} color={"#FFFFFF"}></FontAwesomeIcon>
         </View>
       </Fragment>

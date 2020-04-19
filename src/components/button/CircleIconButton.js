@@ -8,7 +8,9 @@ function CircleIconButton(props) {
   const icon = props.icon || faChevronLeft;
 
   return (
-      <Button variant={"primary"} style={{borderRadius: "50%", marginRight: "20px"}} {...props}><FontAwesomeIcon icon={icon}/></Button>
+      <Button variant={"primary"} style={{borderRadius: "50%", marginRight: "20px"}} {...props}>
+        <FontAwesomeIcon icon={icon}/>
+      </Button>
   )
 }
 

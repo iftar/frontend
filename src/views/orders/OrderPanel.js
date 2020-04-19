@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react';
-import {Button, Card} from 'react-bootstrap';
+import {Button} from 'react-bootstrap';
 import View from '../../components/element-wrappers/View';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import Text from '../../components/element-wrappers/Text';
@@ -11,38 +11,47 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import CircleIcon from '../../components/icons/CircleIcon';
 import LightText from '../../components/element-wrappers/LightText';
+import ThemedCard from '../../components/cards/ThemedCard';
+import CollectionPointAddressUtil from '../../util/CollectionPointAddressUtil';
+import Order from '../../models/Order';
+import ErrorBoundary from '../../components/ErrorBoundary';
 
-function OrderPanel(props) {
+type Props = {
+  order: Order,
+}
+
+function OrderPanel(props: Props) {
 
   const order = props.order;
   const onClick = props.onClick;
 
-  const totalMeals = order.meals_adults + order.meals_children;
+  const collectionPoint = order.collection_point;
+  const collectionPointTimeSlot = order.collection_point_time_slot;
 
   return (
+      <ErrorBoundary>
       <View style={{marginTop: "10px", marginLeft: "5px", marginRight: "5px", width: "100%"}}>
-        <Card style={{ width: '100%' }}>
-          <Card.Body>
-            <View style={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "center", width: "100%", paddingBottom: "20px"}}>
+        <ThemedCard style={{ width: '100%' }}>
+          <View style={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "center", width: "100%", paddingBottom: "20px"}}>
+            <View style={{display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", width: "100%"}}>
+              <CircleIcon icon={faMapPin}/>
+              <LightText>{CollectionPointAddressUtil.getFullAddressFormatted(collectionPoint)}</LightText>
+            </View>
+            <View style={{display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", width: "100%", paddingTop: "20px"}}>
               <View style={{display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", width: "100%"}}>
-                <CircleIcon icon={faMapPin}/>
-                <LightText>{order.collection_point_id}</LightText>
+                <CircleIcon icon={faBox}/>
+                <LightText>Iftar Pack x {order.quantity}</LightText>
               </View>
-              <View style={{display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", width: "100%", paddingTop: "20px"}}>
-                <View style={{display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", width: "100%"}}>
-                  <CircleIcon icon={faBox}/>
-                  <LightText>Iftar Pack x {totalMeals}</LightText>
-                </View>
-                <View style={{display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", width: "100%"}}>
-                  <CircleIcon icon={faClock}/>
-                  <LightText>{order.collection_point_timeslot_id}</LightText>
-                </View>
+              <View style={{display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", width: "100%"}}>
+                <CircleIcon icon={faClock}/>
+                <LightText>{collectionPointTimeSlot.start_time}</LightText>
               </View>
             </View>
-            {onClick && <Button variant={"primary"} block>Edit</Button>}
-          </Card.Body>
-        </Card>
+          </View>
+          {onClick && <Button variant={"primary"} block disabled>Edit</Button>}
+        </ThemedCard>
       </View>
+      </ErrorBoundary>
   )
 }
 

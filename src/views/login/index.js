@@ -7,11 +7,12 @@ import {useHistory} from 'react-router-dom'
 // Images
 import food_del from './../../images/fooddel.png';
 import {Col, Container, Row} from 'react-bootstrap';
-import Card from '../../components/cards/Card';
+import ThemedCard from '../../components/cards/ThemedCard';
+import {URL_SELECT_LOCATION} from '../../constants/urls';
 
 function Login() {
-  const [email, setEmail] = useState('soyeb717@gmail.com');
-  const [password, setPassword] = useState('123');
+  const [email, setEmail] = useState('dilwoar.hussain+dummy@gmail.com');
+  const [password, setPassword] = useState('password');
 
   const history = useHistory();
 
@@ -30,7 +31,7 @@ function Login() {
       .then(result => {
         if (result.status === "success") {
           // update redirect to use browserHistory
-          history.push("/select-location")
+          history.push(URL_SELECT_LOCATION)
         }
         else if (result.status === "error") {
           // use error message from result.message here
@@ -46,7 +47,7 @@ function Login() {
       <Container>
         <Row>
           <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
-            <Card>
+            <ThemedCard>
               <h5 className="card-title text-center">Sign In</h5>
               <form className="form-signin" onSubmit={submitHandler}>
                 <div className="form-label-group">
@@ -64,7 +65,7 @@ function Login() {
                   <p>Not a member yet? <span className="signup_button"><Link to={"/sign-up"}> Sign up  </Link> </span></p>
                 </div>
               </form>
-            </Card>
+            </ThemedCard>
           </div>
         </Row>
       </Container>

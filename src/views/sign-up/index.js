@@ -7,7 +7,7 @@ import './signup.css';
 // Images
 import food_del from './../../images/fooddel.png';
 import {Container, Row} from 'react-bootstrap';
-import Card from '../../components/cards/Card';
+import ThemedCard from '../../components/cards/ThemedCard';
 
 function Signup() {
   const [firstname, setFirstName] = useState('');
@@ -62,7 +62,7 @@ function Signup() {
       <Container>
         <Row>
           <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
-            <Card>
+            <ThemedCard>
                 <h5 className="card-title text-center">Register</h5>
                 <form className="form-signin" onSubmit={submitHandler}>
                   <div className="form-label-group">
@@ -89,7 +89,7 @@ function Signup() {
                   <hr className="my-4" />
                   <button className="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Register</button>
                 </form>
-            </Card>
+            </ThemedCard>
           </div>
         </Row>
       </Container>
