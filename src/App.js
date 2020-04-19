@@ -14,23 +14,12 @@ import SpecificLocation from './components/specific-location'
 import logo from './logo.svg';
 import './App.css';
 
+
 function Home() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Login />
+      {/* <SignUp /> */}
     </div>
   );
 }
@@ -38,7 +27,7 @@ function Home() {
 export default function App() {
   return (
     <Router>
-      <div>
+      <div className="App">
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
