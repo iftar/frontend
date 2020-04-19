@@ -2,9 +2,9 @@ import React from "react";
 
 import "./location.css";
 import data from "./location-data.json";
-import iftarImg from "../assets/images/iftar.png";
-import bluePin from "../assets/images/bluepin.png";
-import backBtn from "../assets/images/back_btn.svg";
+import iftarImg from "../../assets/images/iftar.png";
+import bluePin from "../../assets/images/bluepin.png";
+import backBtn from "../../assets/images/back_btn.svg";
 
 const locationList = data.data.collection_points.data;
 

@@ -9,24 +9,23 @@ import {
 
 import Login from './views/login'
 import SignUp from './views/sign-up'
-import SelectLocation from './components/select-location'
-import SpecificLocation from './components/specific-location'
 
 import logo from './logo.svg';
 import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import OrdersView from './views/orders/OrdersView';
 import {getUserToken} from './util/api';
 import View from './components/element-wrappers/View';
+import SpecificLocation from './views/specific-location';
+import SelectionLocation from './views/select-location';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const location = useLocation();
 
   useEffect(() => {
-    setIsLoggedIn(getUserToken() != null)
-  }, location.pathname);
+    // setIsLoggedIn(getUserToken() != null)
+  }, [location.pathname]);
 
 
   function renderElements() {
@@ -57,7 +56,7 @@ function App() {
                 <SignUp />
               </Route>
               <Route path="/select-location">
-                <SelectLocation />
+                <SelectionLocation />
               </Route>
               <Route path="/specific-location">
                 <SpecificLocation />
@@ -76,9 +75,22 @@ function App() {
 
   return (
       <div className="App">
+        <Navigation/>
         {renderElements()}
       </div>
   );
+}
+
+function Navigation() {
+  return (
+      <View style={{display: "flex", flex: 1, flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
+        <Link to={"/login"}>Login</Link>
+        <Link to={"/sign-up"}>Sign Up</Link>
+        <Link to={"/select-location"}>Select Location</Link>
+        <Link to={"/specific-location"}>Specific Location</Link>
+        <Link to={"/orders"}>Order</Link>
+      </View>
+  )
 }
 
 

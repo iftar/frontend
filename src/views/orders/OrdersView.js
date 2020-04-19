@@ -20,7 +20,7 @@ function OrdersView(props) {
     setLoading(true);
     getOrders()
         .then(data => setOrders(data))
-        .catch(err => setError(err))
+        .catch(err => setError(err.message))
         .finally(() => setLoading(false))
   }, [null]);
 
@@ -44,7 +44,7 @@ function OrdersView(props) {
   }
 
   return (
-      <Container style={{display: "flex", flexDirection: "column", alignItems: "center", height: "100%", paddingBottom: "40px"}}>
+      <Container style={{display: "flex", flexDirection: "column", alignItems: "center", height: "100%", paddingBottom: "40px",  paddingTop: "40px"}}>
         <View style={{display: "flex", width: "100%", justifyContent: "flex-start", alignItems: "center"}}>
           <CircleIconButton onClick={onBackButtonClick}/>
           <HeadingText style={{fontWeight: "bold", fontSize: "2em"}}>My Orders</HeadingText>

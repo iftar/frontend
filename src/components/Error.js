@@ -7,8 +7,8 @@ import LightText from './element-wrappers/LightText';
 function Error(props) {
   return (
       <Fragment>
-        <View style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
-          <FontAwesomeIcon icon={faExclamationCircle}></FontAwesomeIcon>
+        <View style={{display: "flex", flex: 1, flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
+          <FontAwesomeIcon icon={faExclamationCircle} size={"lg"} color={"red"}></FontAwesomeIcon>
           <LightText>{props.children}</LightText>
         </View>
       </Fragment>

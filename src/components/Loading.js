@@ -16,11 +16,11 @@ function Loading() {
     } else {
       setLoadingText(loadingText + ".");
     }
-  }, 100);
+  }, 300);
 
   return (
       <Fragment>
-        <View style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
+        <View style={{display: "flex", flex: 1, flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
           <FontAwesomeIcon icon={faInfo}></FontAwesomeIcon>
           <LightText>{loadingText}</LightText>
         </View>

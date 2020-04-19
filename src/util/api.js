@@ -7,6 +7,9 @@ const BASE_URL = 'https://share-your-iftar-backend.herokuapp.com/api'
 const USER_TOKEN_KEY = "userToken";
 const USER_KEY = "user";
 
+// --------------------------
+// USER API FUNCTIONS
+
 export async function login(email, password) {
   let response
 
@@ -64,6 +67,9 @@ export async function register(firstname, lastname, email, password, confirm) {
 }
 
 
+// --------------------------
+// ORDER API FUNCTIONS
+
 export async function getOrders() {
   const token = getItem("userToken");
 
@@ -82,6 +88,10 @@ export async function getOrders() {
 
     return Object.assign(new Order(), data);
   } catch (error) {
-
+    throw new Error("Failed to fetch orders");
   }
 }
+
+
+// --------------------------
+// ORDER API FUNCTIONS
