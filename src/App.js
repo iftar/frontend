@@ -7,8 +7,8 @@ import {
   useLocation
 } from "react-router-dom"
 
-import Login from './components/login'
-import SignUp from './components/sign-up'
+import Login from './views/login'
+import SignUp from './views/sign-up'
 import SelectLocation from './components/select-location'
 import SpecificLocation from './components/specific-location'
 
@@ -31,7 +31,21 @@ function App() {
 
   function renderElements() {
     if (!isLoggedIn) {
-      return <Login />;
+      return (
+          <View style={{height: "100%", overflowY: "scroll"}}>
+            <Switch>
+              <Route path="/login">
+                <Login />
+              </Route>
+              <Route path="/sign-up">
+                <SignUp />
+              </Route>
+              <Route path="/">
+                <Login />
+              </Route>
+            </Switch>
+          </View>
+      )
     } else {
       return (
           <View style={{height: "100%", overflowY: "scroll"}}>
@@ -56,7 +70,6 @@ function App() {
               </Route>
             </Switch>
           </View>
-
       )
     }
   }

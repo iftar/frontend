@@ -2,15 +2,18 @@ import React, { useState } from 'react';
 import { login } from '../../util/api'
 import './login.css';
 import { Link } from "react-router-dom";
+import {useHistory} from 'react-router-dom'
 
 // Images
 import food_del from './../../images/fooddel.png';
 import {Col, Container, Row} from 'react-bootstrap';
-import Card from '../cards/Card';
+import Card from '../../components/cards/Card';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const history = useHistory();
 
   const emailInputHandler = (e) => {
     setEmail(e.target.value);
@@ -27,7 +30,7 @@ function Login() {
       .then(result => {
         if (result.status === "success") {
           // update redirect to use browserHistory
-          window.location = "/select-location"
+          history.push("/select-location")
         }
         else if (result.status === "error") {
           // use error message from result.message here
