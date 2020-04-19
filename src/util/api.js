@@ -120,22 +120,23 @@ export async function getOrders() {
   }
 }
 
-export async function ordercheck(userId, user_can_order) {
+export async function canUserPlaceOrder() {
   let response;
 
   try {
-    response = await axios.get(`${ORDER_CHECK_URL}?id={userId}`, {
-      user_can_order,
+    response = await axios.get(`${BASE_URL}/user/orders/check`, {
+      headers: {
+        'Authorization': 'Bearer ' + getUserToken(),
+      },
     });
     const data = response.data;
-    console.log("data: ", data);
-    return data;
+    logger.info("data: ", data);
+    return data.data.check.user_can_order;
   } catch (error) {
-    console.log("error: ", error.response);
-    return error.response.data;
+    logger.error("error: ", error.response);
+    throw new Error(error.response.data);
   }
 }
-
 
 export async function getLocations() {
   const token = getItem("userToken");
@@ -147,10 +148,10 @@ export async function getLocations() {
       },
     });
     const data = response.data;
-    console.log("data: ", data);
+    logger.info("data: ", data);
     return Object.assign(new Location(), data);
   } catch (error) {
-    console.log("error: ", error.response);
-    return error.response.data;
+    logger.error("error: ", error.response);
+    throw new Error(error.response.data);
   }
 }

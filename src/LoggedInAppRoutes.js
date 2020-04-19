@@ -4,7 +4,7 @@ import {
   Switch,
   Route,
   Link,
-  useLocation
+  useHistory
 } from "react-router-dom"
 
 import Login from './views/login'
@@ -13,10 +13,19 @@ import SignUp from './views/sign-up'
 import './App.css';
 import View from './components/element-wrappers/View';
 import SelectionLocation from './views/select-location';
-import SpecificLocation from './views/specific-location';
+import CreateOrder from './views/create-order/CreateOrder';
 import OrdersView from './views/orders/OrdersView';
 
 function LoggedInAppRoutes() {
+
+  const [selectedLocation, setSelectedLocation] = useState(null);
+
+  const history = useHistory();
+
+  function onLocationSelected(location) {
+    setSelectedLocation(location);
+    history.push("/create-order");
+  }
 
   return (
       <View style={{height: "100%", overflowY: "scroll"}}>
@@ -28,16 +37,16 @@ function LoggedInAppRoutes() {
             <SignUp />
           </Route>
           <Route path="/select-location">
-            <SelectionLocation />
+            <SelectionLocation onLocationSelected={onLocationSelected} />
           </Route>
-          <Route path="/specific-location">
-            <SpecificLocation />
+          <Route path="/create-order">
+            <CreateOrder />
           </Route>
           <Route path="/orders">
             <OrdersView />
           </Route>
           <Route path="/">
-            <OrdersView />
+            <CreateOrder />
           </Route>
         </Switch>
       </View>

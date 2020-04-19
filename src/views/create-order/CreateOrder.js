@@ -1,31 +1,33 @@
 import React, {Fragment, useEffect, useState} from 'react';
-import {Container} from 'react-bootstrap';
-import OrdersTodayView from './OrdersTodayView';
-import OrdersHistoryView from './OrdersHistoryView';
-import View from '../../components/element-wrappers/View';
-import CircleIconButton from '../../components/button/CircleIconButton';
-import Text from '../../components/element-wrappers/Text';
-import HeadingText from '../../components/element-wrappers/HeadingText';
 import {getOrders} from '../../util/api';
 import Loading from '../../components/Loading';
 import Error from '../../components/Error';
+import OrdersTodayView from '../orders/OrdersTodayView';
+import OrdersHistoryView from '../orders/OrdersHistoryView';
 import ErrorBoundary from '../../components/ErrorBoundary';
+import View from '../../components/element-wrappers/View';
+import CircleIconButton from '../../components/button/CircleIconButton';
+import HeadingText from '../../components/element-wrappers/HeadingText';
+import SubHeadingText from '../../components/element-wrappers/SubHeadingText';
+import {Container} from 'react-bootstrap';
 import {useHistory} from 'react-router-dom';
+import CreateOrderConfirmationDialogue from './CreateOrderConfirmationDialogue';
 
-function OrdersView(props) {
+function CreateOrder(props) {
 
-  const [orders, setOrders] = useState([]);
+  // const [orders, setOrders] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const history = useHistory();
 
   useEffect(() => {
-    setLoading(true);
-    getOrders().
-        then(data => setOrders(data)).
-        catch(err => setError(err.message)).
-        finally(() => setLoading(false));
+    // DO api calls here if need be
+    // setLoading(true);
+    // getOrders().
+    //     then(data => setOrders(data)).
+    //     catch(err => setError(err.message)).
+    //     finally(() => setLoading(false));
   }, [null]);
 
   function onBackButtonClick() {
@@ -40,8 +42,8 @@ function OrdersView(props) {
     } else {
       return (
           <Fragment>
-            <OrdersTodayView orders={orders}/>
-            <OrdersHistoryView orders={orders}/>
+            <CreateOrderConfirmationDialogue/>
+            {/*<SubHeadingText>Create Order Here...</SubHeadingText>*/}
           </Fragment>
       );
     }
@@ -64,13 +66,14 @@ function OrdersView(props) {
             alignItems: 'center',
           }}>
             <CircleIconButton onClick={onBackButtonClick}/>
-            <HeadingText style={{fontWeight: 'bold', fontSize: '2em'}}>My
-              Orders</HeadingText>
+            <HeadingText style={{fontWeight: 'bold', fontSize: '2em'}}>Create
+              Order</HeadingText>
           </View>
           {renderElements()}
         </Container>
       </ErrorBoundary>
   );
-}
 
-export default OrdersView;
+};
+
+export default CreateOrder;

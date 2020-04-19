@@ -1,24 +1,50 @@
 class Order {
+
   id: number;
-  name: string;
-  type: string;
+  user_id: number;
+  quantity: number;
+  required_date: Date;
   collection_point_id: number;
-  collection_point_timeslot_id: number;
-  meals_adults: number;
-  meals_children: number;
+  collection_point_time_slot_id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  address_line_1: string;
+  address_line_2: string;
+  city: string;
+  county: string;
+  post_code: string;
   notes: string;
+  status: string;
+  created_at: Date;
+  updated_at: Date;
 
   constructor(
-      id: number, name: string, type: string, collection_point_id: number,
-      collection_point_timeslot_id: number, meals_adults: number,
-      meals_children: number, notes: string) {
+      id: number, user_id: number, quantity: number, required_date: Date,
+      collection_point_id: number, collection_point_time_slot_id: number,
+      first_name: string, last_name: string, email: string, phone: string,
+      address_line_1: string, address_line_2: string, city: string,
+      county: string, post_code: string, notes: string, status: string,
+      created_at: Date, updated_at: Date) {
     this.id = id;
-    this.name = name;
-    this.type = type;
+    this.user_id = user_id;
+    this.quantity = quantity;
+    this.required_date = required_date;
     this.collection_point_id = collection_point_id;
-    this.collection_point_timeslot_id = collection_point_timeslot_id;
-    this.meals_adults = meals_adults;
-    this.meals_children = meals_children;
+    this.collection_point_time_slot_id = collection_point_time_slot_id;
+    this.first_name = first_name;
+    this.last_name = last_name;
+    this.email = email;
+    this.phone = phone;
+    this.address_line_1 = address_line_1;
+    this.address_line_2 = address_line_2;
+    this.city = city;
+    this.county = county;
+    this.post_code = post_code;
     this.notes = notes;
+    this.status = status;
+    this.created_at = created_at;
+    this.updated_at = updated_at;
   }
 }

@@ -10,8 +10,8 @@ import {Col, Container, Row} from 'react-bootstrap';
 import Card from '../../components/cards/Card';
 
 function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('soyeb717@gmail.com');
+  const [password, setPassword] = useState('123');
 
   const history = useHistory();
 
