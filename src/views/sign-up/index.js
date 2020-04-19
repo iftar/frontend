@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { register } from '../../util/api'
-import axios from 'axios';
+import {useHistory} from 'react-router-dom'
 
 import './signup.css';
 
 // Images
 import food_del from './../../images/fooddel.png';
+import {Container, Row} from 'react-bootstrap';
+import Card from '../../components/cards/Card';
 
 function Signup() {
   const [firstname, setFirstName] = useState('');
@@ -13,6 +15,8 @@ function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirmPassword] = useState('');
+
+  const history = useHistory();
 
   const firstnameInputHandler = (e) => {
     setFirstName(e.target.value);
@@ -40,7 +44,7 @@ function Signup() {
 
         if (result.status === "success") {
           console.log('successsss')
-          window.location = "/login"
+          history.push("/login")
         }
         else if (result.status === "error") {
           console.log('erroreddddd')
@@ -52,14 +56,13 @@ function Signup() {
   return (
     <React.Fragment>
 
-      <div className="container">
+      <Container>
         <img className="login_image" src={food_del} alt="Alt" />
-      </div>
-      <div className="container">
-        <div className="row">
+      </Container>
+      <Container>
+        <Row>
           <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
-            <div className="card card-signin my-5">
-              <div className="card-body">
+            <Card>
                 <h5 className="card-title text-center">Register</h5>
                 <form className="form-signin" onSubmit={submitHandler}>
                   <div className="form-label-group">
@@ -86,11 +89,10 @@ function Signup() {
                   <hr className="my-4" />
                   <button className="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Register</button>
                 </form>
-              </div>
-            </div>
+            </Card>
           </div>
-        </div>
-      </div>
+        </Row>
+      </Container>
 
     </React.Fragment>
   )

@@ -1,0 +1,92 @@
+{
+    "status": "success",
+    "data": {
+        "collection_points": {
+            "current_page": 1,
+            "data": [
+                {
+                    "id": 1,
+                    "name": "East London Center",
+                    "distance": "0.5m",
+                    "meal_left": "15",
+                    "address_line_1": "Flat 55f\nHarrison Courts",
+                    "address_line_2": "Nicole Extensions",
+                    "city": "Port Ambermouth",
+                    "county": "Hampshire",
+                    "post_code": "GL55 6HT",
+                    "max_daily_capacity": "100",
+                    "created_at": "2020-04-17T00:28:22.000000Z",
+                    "updated_at": "2020-04-18T17:01:48.000000Z",
+                    "collection_point_time_slots": [
+                        {
+                            "id": 1,
+                            "collection_point_id": "1",
+                            "start_time": "18:00",
+                            "end_time": "18:15",
+                            "max_capacity": "5",
+                            "type": "user_pickup",
+                            "created_at": "2020-04-17T00:28:23.000000Z",
+                            "updated_at": "2020-04-17T00:28:23.000000Z"
+                        },
+                        {
+                            "id": 2,
+                            "collection_point_id": "1",
+                            "start_time": "18:15",
+                            "end_time": "18:30",
+                            "max_capacity": "5",
+                            "type": "charity_pickup",
+                            "created_at": "2020-04-17T00:28:23.000000Z",
+                            "updated_at": "2020-04-17T00:28:23.000000Z"
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "name": "Whitechapel Centre",
+                    "distance": "0.7m",
+                    "meal_left": "15",
+                    "address_line_1": "902 Theresa Circles",
+                    "address_line_2": "Damien Squares",
+                    "city": "Dalemouth",
+                    "county": "Ayrshire",
+                    "post_code": "TN34 9GL",
+                    "max_daily_capacity": "57",
+                    "created_at": "2020-04-17T00:28:22.000000Z",
+                    "updated_at": "2020-04-17T00:28:22.000000Z",
+                    "collection_point_time_slots": [
+                        {
+                            "id": 3,
+                            "collection_point_id": "2",
+                            "start_time": "18:00",
+                            "end_time": "18:15",
+                            "max_capacity": "5",
+                            "type": "user_pickup",
+                            "created_at": "2020-04-17T00:28:24.000000Z",
+                            "updated_at": "2020-04-17T00:28:24.000000Z"
+                        },
+                        {
+                            "id": 4,
+                            "collection_point_id": "2",
+                            "start_time": "19:05",
+                            "end_time": "19:15",
+                            "max_capacity": "5",
+                            "type": "charity_pickup",
+                            "created_at": "2020-04-17T00:28:23.000000Z",
+                            "updated_at": "2020-04-17T00:28:23.000000Z"
+                        }
+                    ]
+                }
+            ],
+            "first_page_url": "https://share-your-iftar-backend.herokuapp.com/api/collection-points?page=1",
+            "from": 1,
+            "last_page": 1,
+            "last_page_url": "https://share-your-iftar-backend.herokuapp.com/api/collection-points?page=1",
+            "next_page_url": null,
+            "path": "https://share-your-iftar-backend.herokuapp.com/api/collection-points",
+            "per_page": 15,
+            "prev_page_url": null,
+            "to": 2,
+            "total": 2
+        }
+    }
+}

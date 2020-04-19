@@ -1,53 +1,66 @@
-import React from 'react'
+import React, {Fragment, useEffect, useState} from 'react';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  useLocation
 } from "react-router-dom"
 
-import Login from './components/login'
-import SignUp from './components/sign-up'
-import SelectLocation from './components/select-location'
-import SpecificLocation from './components/specific-location'
+import Login from './views/login'
+import SignUp from './views/sign-up'
 
 import logo from './logo.svg';
 import './App.css';
+import OrdersView from './views/orders/OrdersView';
+import {getUserToken} from './util/api';
+import View from './components/element-wrappers/View';
+import SpecificLocation from './views/specific-location';
+import SelectionLocation from './views/select-location';
+import LoggedInAppRoutes from './LoggedInAppRoutes';
+import NotLoggedInAppRoutes from './NotLoggedInAppRoutes';
+
+function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    // setIsLoggedIn(getUserToken() != null)
+  }, [location.pathname]);
 
 
-function Home() {
+  function renderElements() {
+    if (!isLoggedIn) {
+      return (
+          <NotLoggedInAppRoutes/>
+      )
+    } else {
+      return (
+          <LoggedInAppRoutes/>
+      )
+    }
+  }
+
   return (
-    <div className="App">
-      <Login />
-      {/* <SignUp /> */}
-    </div>
-  );
-}
-
-export default function App() {
-  return (
-    <Router>
       <div className="App">
-        {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
-        <Switch>
-          <Route path="/login">
-            <Login />
-          </Route>
-          <Route path="/sign-up">
-            <SignUp />
-          </Route>
-          <Route path="/select-location">
-            <SelectLocation />
-          </Route>
-          <Route path="/specific-location">
-            <SpecificLocation />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch>
+        <Navigation/>
+        {renderElements()}
       </div>
-    </Router>
   );
 }
+
+function Navigation() {
+  return (
+      <View style={{display: "flex", flex: 1, flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
+        <Link to={"/login"}>Login</Link>
+        <Link to={"/sign-up"}>Sign Up</Link>
+        <Link to={"/select-location"}>Select Location</Link>
+        <Link to={"/specific-location"}>Specific Location</Link>
+        <Link to={"/orders"}>Order</Link>
+      </View>
+  )
+}
+
+
+export default App;
