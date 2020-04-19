@@ -23,7 +23,7 @@ function Login() {
 
     login(email, password)
       .then(result => {
-        if (result.status === "sucess") {
+        if (result.status === "success") {
           // update redirect to use browserHistory
           window.location = "/select-location"
         }

@@ -29,3 +29,29 @@ export async function login(email, password) {
     return error.response.data
   }
 }
+
+
+export async function register(firstname, lastname, email, password, confirm) {
+  let response
+
+  try {
+    response = await axios.post(`${BASE_URL}/register`, {
+      firstname,
+      lastname,
+      email,
+      password,
+      confirm
+    })
+
+    const data = response.data
+
+    console.log('data: ', data)
+
+    return data
+  }
+  catch (error) {
+    console.log('error: ', error.response)
+    return error.response.data
+  }
+}
+
