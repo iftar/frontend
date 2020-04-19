@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import { login } from '../../util/api'
 import './login.css';
-import axios from 'axios';
 import { Link } from "react-router-dom";
 
 // Images
@@ -23,18 +23,15 @@ function Login() {
     e.preventDefault();
     console.log("email and password", email, password);
 
-    axios.post('https://share-your-iftar-backend.herokuapp.com/api/login', {
-      email,
-      password,
-    })
-      .then(response => {
-        console.log(response);
-        if (response.status === 200) {
-          window.location = "/select-location";
+    login(email, password)
+      .then(result => {
+        if (result.status === "success") {
+          // update redirect to use browserHistory
+          window.location = "/select-location"
         }
-      })
-      .catch(error => {
-        console.log(error);
+        else if (result.status === "error") {
+          // use error message from result.message here
+        }
       })
   }
 

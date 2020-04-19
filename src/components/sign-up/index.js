@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import './signup.css';
+import { register } from '../../util/api'
 import axios from 'axios';
 
+import './signup.css';
 
 // Images
 import food_del from './../../images/fooddel.png';
@@ -32,27 +33,24 @@ function Signup() {
   const submitHandler = e => {
     e.preventDefault();
     console.log("details", firstname, lastname, email, password, confirm);
-    axios.post('https://share-your-iftar-backend.herokuapp.com/api/register', {
-      firstname,
-      lastname,
-      email,
-      password,
-      confirm
-    })
-      .then(response => {
-        console.log(response);
-        if (response.status === 200) {
-          window.location = "/login";
+
+    register(firstname, lastname, email, password, confirm)
+      .then(result => {
+        console.log('result: ', result)
+
+        if (result.status === "success") {
+          console.log('successsss')
+          window.location = "/login"
         }
-      })
-      .catch(error => {
-        console.log(error.message);
+        else if (result.status === "error") {
+          console.log('erroreddddd')
+          // use error message from result.message here
+        }
       })
   }
 
   return (
     <React.Fragment>
-
 
       <div className="container">
         <img className="login_image" src={food_del} alt="Alt" />
