@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {getItem, saveItem} from './storage';
+import { getItem, saveItem } from './storage';
 import Order from '../models/Order';
 import User from '../models/User';
 import Logger from './Logger';

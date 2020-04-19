@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect, useState} from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom';
 
 import './App.css';
-import {getUserDetails, getUserToken} from './util/api';
+import { getUserDetails, getUserToken } from './util/api';
 import View from './components/element-wrappers/View';
 import LoggedInAppRoutes from './LoggedInAppRoutes';
 import NotLoggedInAppRoutes from './NotLoggedInAppRoutes';
@@ -20,45 +20,45 @@ function App() {
 
   useEffect(() => {
     getUserDetails()
-        .then(() => setIsLoggedIn(true))
-        .catch(() => setIsLoggedIn(false));
+      .then(() => setIsLoggedIn(true))
+      .catch(() => setIsLoggedIn(false));
   }, [location.pathname]);
 
   function renderElements() {
     if (!isLoggedIn) {
       return (
-          <NotLoggedInAppRoutes/>
+        <NotLoggedInAppRoutes />
       );
     } else {
       return (
-          <LoggedInAppRoutes/>
+        <LoggedInAppRoutes />
       );
     }
   }
 
   return (
-      <div className="App">
-        <Navigation/>
-        {renderElements()}
-      </div>
+    <div className="App">
+      <Navigation />
+      {renderElements()}
+    </div>
   );
 }
 
 function Navigation() {
   return (
-      <View style={{
-        display: 'flex',
-        flex: 1,
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
-        <Link to={'/login'}>Login</Link>
-        <Link to={'/sign-up'}>Sign Up</Link>
-        <Link to={'/select-location'}>Select Location</Link>
-        <Link to={'/specific-location'}>Specific Location</Link>
-        <Link to={'/orders'}>Order</Link>
-      </View>
+    <View style={{
+      display: 'flex',
+      flex: 1,
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}>
+      <Link to={'/login'}>Login</Link>
+      <Link to={'/sign-up'}>Sign Up</Link>
+      <Link to={'/select-location'}>Select Location</Link>
+      <Link to={'/create-order'}>Create Order</Link>
+      <Link to={'/orders'}>Order</Link>
+    </View>
   );
 }
 
