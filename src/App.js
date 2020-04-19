@@ -17,6 +17,8 @@ import {getUserToken} from './util/api';
 import View from './components/element-wrappers/View';
 import SpecificLocation from './views/specific-location';
 import SelectionLocation from './views/select-location';
+import LoggedInAppRoutes from './LoggedInAppRoutes';
+import NotLoggedInAppRoutes from './NotLoggedInAppRoutes';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
@@ -31,44 +33,11 @@ function App() {
   function renderElements() {
     if (!isLoggedIn) {
       return (
-          <View style={{height: "100%", overflowY: "scroll"}}>
-            <Switch>
-              <Route path="/login">
-                <Login />
-              </Route>
-              <Route path="/sign-up">
-                <SignUp />
-              </Route>
-              <Route path="/">
-                <Login />
-              </Route>
-            </Switch>
-          </View>
+          <NotLoggedInAppRoutes/>
       )
     } else {
       return (
-          <View style={{height: "100%", overflowY: "scroll"}}>
-            <Switch>
-              <Route path="/login">
-                <Login />
-              </Route>
-              <Route path="/sign-up">
-                <SignUp />
-              </Route>
-              <Route path="/select-location">
-                <SelectionLocation />
-              </Route>
-              <Route path="/specific-location">
-                <SpecificLocation />
-              </Route>
-              <Route path="/orders">
-                <OrdersView />
-              </Route>
-              <Route path="/">
-                <OrdersView />
-              </Route>
-            </Switch>
-          </View>
+          <LoggedInAppRoutes/>
       )
     }
   }
