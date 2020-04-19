@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react';
 
-function TodayOrdersView(props) {
+function OrdersHistoryView(props) {
 
   return (
       <Fragment>
@@ -9,4 +9,4 @@ function TodayOrdersView(props) {
   )
 }
 
-export default TodayOrdersView;
+export default OrdersHistoryView;

@@ -13,27 +13,8 @@ import SpecificLocation from './components/specific-location'
 
 import logo from './logo.svg';
 import './App.css';
-
-function Home() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import 'bootstrap/dist/css/bootstrap.min.css';
+import OrdersView from './views/orders/OrdersView';
 
 export default function App() {
   return (
@@ -54,8 +35,11 @@ export default function App() {
           <Route path="/specific-location">
             <SpecificLocation />
           </Route>
+          <Route path="/orders">
+            <OrdersView />
+          </Route>
           <Route path="/">
-            <Home />
+            <OrdersView />
           </Route>
         </Switch>
       </div>
