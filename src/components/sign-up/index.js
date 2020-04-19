@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { register } from '../../util/api'
-import axios from 'axios';
+import {useHistory} from 'react-router-dom'
 
 import './signup.css';
 
@@ -13,6 +13,8 @@ function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirmPassword] = useState('');
+
+  const history = useHistory();
 
   const firstnameInputHandler = (e) => {
     setFirstName(e.target.value);
@@ -42,7 +44,7 @@ function Signup() {
 
         if (result.status === "success") {
           console.log("please verify your email");
-          window.location = "/login";
+          history.push("/login")
         }
         else if (result.status === "error") {
           console.log('erroreddddd')

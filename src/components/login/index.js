@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { login } from '../../util/api'
+import { register } from '../../util/api';
 import './login.css';
 import { Link } from "react-router-dom";
+import {useHistory} from 'react-router-dom'
+
+
 
 // Images
 import logo from './../../images/shareiftar-logo.png';
@@ -9,6 +13,8 @@ import logo from './../../images/shareiftar-logo.png';
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  
+  const history = useHistory();
 
   const emailInputHandler = (e) => {
     setEmail(e.target.value);
@@ -28,7 +34,7 @@ function Login() {
       .then(result => {
         if (result.status === "success") {
           // update redirect to use browserHistory
-          window.location = "/select-location";
+          history.push("/select-location")
           
         }
         else if (result.status === "error") {
