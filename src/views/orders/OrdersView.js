@@ -9,6 +9,7 @@ import HeadingText from '../../components/element-wrappers/HeadingText';
 import {getOrders} from '../../util/api';
 import Loading from '../../components/Loading';
 import Error from '../../components/Error';
+import ErrorBoundary from '../../components/ErrorBoundary';
 
 function OrdersView(props) {
 
@@ -18,10 +19,10 @@ function OrdersView(props) {
 
   useEffect(() => {
     setLoading(true);
-    getOrders()
-        .then(data => setOrders(data))
-        .catch(err => setError(err.message))
-        .finally(() => setLoading(false))
+    getOrders().
+        then(data => setOrders(data)).
+        catch(err => setError(err.message)).
+        finally(() => setLoading(false));
   }, [null]);
 
   function onBackButtonClick() {
@@ -29,29 +30,44 @@ function OrdersView(props) {
   }
 
   function renderElements() {
-    if(loading) {
-      return <Loading/>
-    } else if(error) {
-      return <Error>{error}</Error>
+    if (loading) {
+      return <Loading/>;
+    } else if (error) {
+      return <Error>{error}</Error>;
     } else {
       return (
           <Fragment>
             <OrdersTodayView orders={orders}/>
             <OrdersHistoryView orders={orders}/>
           </Fragment>
-      )
+      );
     }
   }
 
   return (
-      <Container style={{display: "flex", flexDirection: "column", alignItems: "center", height: "100%", paddingBottom: "40px",  paddingTop: "40px"}}>
-        <View style={{display: "flex", width: "100%", justifyContent: "flex-start", alignItems: "center"}}>
-          <CircleIconButton onClick={onBackButtonClick}/>
-          <HeadingText style={{fontWeight: "bold", fontSize: "2em"}}>My Orders</HeadingText>
-        </View>
-        {renderElements()}
-      </Container>
-  )
+      <ErrorBoundary>
+        <Container style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          height: '100%',
+          paddingBottom: '40px',
+          paddingTop: '40px',
+        }}>
+          <View style={{
+            display: 'flex',
+            width: '100%',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+          }}>
+            <CircleIconButton onClick={onBackButtonClick}/>
+            <HeadingText style={{fontWeight: 'bold', fontSize: '2em'}}>My
+              Orders</HeadingText>
+          </View>
+          {renderElements()}
+        </Container>
+      </ErrorBoundary>
+  );
 }
 
 export default OrdersView;

@@ -1,49 +1,51 @@
-import axios from 'axios'
+import axios from 'axios';
 import {getItem, saveItem} from './storage';
-import Order from '../models/Order'
+import Order from '../models/Order';
+import User from '../models/User';
+import Logger from './Logger';
 
-const BASE_URL = 'https://share-your-iftar-backend.herokuapp.com/api'
+const BASE_URL = 'https://share-your-iftar-backend.herokuapp.com/api';
 
-const USER_TOKEN_KEY = "userToken";
-const USER_KEY = "user";
+const USER_TOKEN_KEY = 'userToken';
+const USER_KEY = 'user';
+
+const logger = new Logger('api');
 
 // --------------------------
 // USER API FUNCTIONS
-
-export async function login(email, password) {
-  let response
-
-  try {
-    response = await axios.post(`${BASE_URL}/login`, {
-      email,
-      password,
-    })
-    const data = response.data
-
-    if (response.status === 200) {
-      const user = data.data.user
-      const token = data.data.token
-
-      // Storing user info and token in localStorage
-      saveItem(USER_TOKEN_KEY, token)
-      saveItem(USER_KEY, JSON.stringify(user))
-    }
-
-    return data
-  }
-  catch (error) {
-    console.log('error: ', error.response)
-    return error.response.data
-  }
-}
 
 export function getUserToken() {
   return getItem(USER_TOKEN_KEY);
 }
 
+export async function login(email, password) {
+  let response;
+
+  try {
+    response = await axios.post(`${BASE_URL}/login`, {
+      email,
+      password,
+    });
+    const data = response.data;
+
+    if (response.status === 200) {
+      const user = data.data.user;
+      const token = data.data.token;
+
+      // Storing user info and token in localStorage
+      saveItem(USER_TOKEN_KEY, token);
+      saveItem(USER_KEY, JSON.stringify(user));
+    }
+
+    return data;
+  } catch (error) {
+    console.log('error: ', error.response);
+    return error.response.data;
+  }
+}
 
 export async function register(firstname, lastname, email, password, confirm) {
-  let response
+  let response;
 
   try {
     response = await axios.post(`${BASE_URL}/register`, {
@@ -51,47 +53,70 @@ export async function register(firstname, lastname, email, password, confirm) {
       lastname,
       email,
       password,
-      confirm
-    })
+      confirm,
+    });
 
-    const data = response.data
+    const data = response.data;
 
-    console.log('data: ', data)
+    console.log('data: ', data);
 
-    return data
-  }
-  catch (error) {
-    console.log('error: ', error.response)
-    return error.response.data
+    return data;
+  } catch (error) {
+    console.log('error: ', error.response);
+    return error.response.data;
   }
 }
 
+export async function getUserDetails() {
+  const token = getUserToken();
+
+  let response;
+
+  try {
+    response = await axios.get(`${BASE_URL}/user`, {
+      headers: {
+        'Authorization': 'Bearer ' + token,
+      },
+    });
+
+    const data = response.data;
+    const appData = data.data;
+
+    logger.info('response data', data);
+
+    return Object.assign(User, appData.user);
+  } catch (error) {
+    logger.error(error.message);
+    throw new Error('Failed to fetch user details');
+  }
+}
 
 // --------------------------
 // ORDER API FUNCTIONS
 
 export async function getOrders() {
-  const token = getItem("userToken");
+  const token = getUserToken();
 
   let response;
 
   try {
     response = await axios.get(`${BASE_URL}/user/orders`, {
       headers: {
-        'Authorization': 'Bearer ' + token
-      }
+        'Authorization': 'Bearer ' + token,
+      },
     });
 
     const data = response.data;
+    const appData = data.data;
 
-    console.log('data', data);
+    logger.info('response data', data);
 
-    return Object.assign(new Order(), data);
+    return appData.orders.map(order => Object.assign(Order, order));
   } catch (error) {
-    throw new Error("Failed to fetch orders");
+    logger.error(error.message);
+    throw new Error('Failed to fetch orders');
   }
 }
-
 
 // --------------------------
 // ORDER API FUNCTIONS

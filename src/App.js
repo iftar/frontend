@@ -4,19 +4,12 @@ import {
   Switch,
   Route,
   Link,
-  useLocation
-} from "react-router-dom"
+  useLocation,
+} from 'react-router-dom';
 
-import Login from './views/login'
-import SignUp from './views/sign-up'
-
-import logo from './logo.svg';
 import './App.css';
-import OrdersView from './views/orders/OrdersView';
-import {getUserToken} from './util/api';
+import {getUserDetails, getUserToken} from './util/api';
 import View from './components/element-wrappers/View';
-import SpecificLocation from './views/specific-location';
-import SelectionLocation from './views/select-location';
 import LoggedInAppRoutes from './LoggedInAppRoutes';
 import NotLoggedInAppRoutes from './NotLoggedInAppRoutes';
 
@@ -26,19 +19,20 @@ function App() {
   const location = useLocation();
 
   useEffect(() => {
-    // setIsLoggedIn(getUserToken() != null)
+    getUserDetails()
+        .then(() => setIsLoggedIn(true))
+        .catch(() => setIsLoggedIn(false));
   }, [location.pathname]);
-
 
   function renderElements() {
     if (!isLoggedIn) {
       return (
           <NotLoggedInAppRoutes/>
-      )
+      );
     } else {
       return (
           <LoggedInAppRoutes/>
-      )
+      );
     }
   }
 
@@ -52,15 +46,20 @@ function App() {
 
 function Navigation() {
   return (
-      <View style={{display: "flex", flex: 1, flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
-        <Link to={"/login"}>Login</Link>
-        <Link to={"/sign-up"}>Sign Up</Link>
-        <Link to={"/select-location"}>Select Location</Link>
-        <Link to={"/specific-location"}>Specific Location</Link>
-        <Link to={"/orders"}>Order</Link>
+      <View style={{
+        display: 'flex',
+        flex: 1,
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+        <Link to={'/login'}>Login</Link>
+        <Link to={'/sign-up'}>Sign Up</Link>
+        <Link to={'/select-location'}>Select Location</Link>
+        <Link to={'/specific-location'}>Specific Location</Link>
+        <Link to={'/orders'}>Order</Link>
       </View>
-  )
+  );
 }
-
 
 export default App;

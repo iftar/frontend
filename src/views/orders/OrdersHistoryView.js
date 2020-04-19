@@ -2,6 +2,8 @@ import React, {Fragment, useEffect, useState} from 'react';
 import View from '../../components/element-wrappers/View';
 import OrderPanel from './OrderPanel';
 import SubHeadingText from '../../components/element-wrappers/SubHeadingText';
+import ErrorBoundary from '../../components/ErrorBoundary';
+import NoItemsFound from '../../components/NoItemsFound';
 
 function OrdersHistoryView(props) {
 
@@ -52,16 +54,21 @@ function OrdersHistoryView(props) {
 
 
   function renderOrderElements() {
-    return orders.map(order => <OrderPanel order={order}/>);
+    const orders = props.orders;
+    if(orders == null || orders.length === 0) {
+      return <NoItemsFound/>
+    } else {
+      return orders.map(order => <OrderPanel key={order.id} order={order}/>);
+    }
   }
 
   return (
-      <Fragment>
+      <ErrorBoundary>
         <View style={{display: "flex", flexDirection: "column", paddingTop: "30px", width: "100%"}}>
           <SubHeadingText>History</SubHeadingText>
           {renderOrderElements()}
         </View>
-      </Fragment>
+      </ErrorBoundary>
   )
 }
 

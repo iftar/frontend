@@ -5,7 +5,7 @@ export const saveItem = (name, data) => {
 };
 
 export const getItem = (name) => {
-  storage.getItem(name)
+  return storage.getItem(name)
 };
 
 export const removeItem = (name) => {
