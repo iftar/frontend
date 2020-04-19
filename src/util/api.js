@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { saveItem } from './storage'
 
 const BASE_URL = 'https://share-your-iftar-backend.herokuapp.com/api'
 
@@ -16,9 +17,9 @@ export async function login(email, password) {
       const user = data.data.user
       const token = data.data.token
 
-      // set token in localstorage
-      console.log('user: ', user)
-      console.log('token: ', token)
+      // Storing user info and token in localStorage
+      saveItem("userToken", token)
+      saveItem("user", JSON.stringify(user))
     }
 
     return data
