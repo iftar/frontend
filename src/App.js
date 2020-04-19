@@ -1,9 +1,10 @@
-import React from 'react'
+import React, {Fragment, useEffect, useState} from 'react';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  useLocation
 } from "react-router-dom"
 
 import Login from './components/login'
@@ -15,34 +16,57 @@ import logo from './logo.svg';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import OrdersView from './views/orders/OrdersView';
+import {getUserToken} from './util/api';
+import View from './components/element-wrappers/View';
 
-export default function App() {
+function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    setIsLoggedIn(getUserToken() != null)
+  }, location.pathname);
+
+
+  function renderElements() {
+    if (!isLoggedIn) {
+      return <Login />;
+    } else {
+      return (
+          <View style={{height: "100%", overflowY: "scroll"}}>
+            <Switch>
+              <Route path="/login">
+                <Login />
+              </Route>
+              <Route path="/sign-up">
+                <SignUp />
+              </Route>
+              <Route path="/select-location">
+                <SelectLocation />
+              </Route>
+              <Route path="/specific-location">
+                <SpecificLocation />
+              </Route>
+              <Route path="/orders">
+                <OrdersView />
+              </Route>
+              <Route path="/">
+                <OrdersView />
+              </Route>
+            </Switch>
+          </View>
+
+      )
+    }
+  }
+
   return (
-    <Router>
       <div className="App">
-        {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
-        <Switch>
-          <Route path="/login">
-            <Login />
-          </Route>
-          <Route path="/sign-up">
-            <SignUp />
-          </Route>
-          <Route path="/select-location">
-            <SelectLocation />
-          </Route>
-          <Route path="/specific-location">
-            <SpecificLocation />
-          </Route>
-          <Route path="/orders">
-            <OrdersView />
-          </Route>
-          <Route path="/">
-            <OrdersView />
-          </Route>
-        </Switch>
+        {renderElements()}
       </div>
-    </Router>
   );
 }
+
+
+export default App;
