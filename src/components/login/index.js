@@ -28,7 +28,6 @@ function Login() {
 
   const submitHandler = e => {
     e.preventDefault();
-    console.log("email and password", email, password);
 
     login(email, password)
       .then(result => {
@@ -38,9 +37,6 @@ function Login() {
           
         }
         else if (result.status === "error") {
-          // use error message from result.message here
-          console.log(result.message);
-          // setErrorMessage('Invalid Login Details');
           setErrorMessage(result.message);
         }
       })

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { register } from '../../util/api'
 import {useHistory} from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 import './signup.css';
 
@@ -13,7 +14,9 @@ function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirmPassword] = useState('');
+  const [hasUserSignedUp, setHasUserSignedUp] = useState(false);
 
+  
   const history = useHistory();
 
   const firstnameInputHandler = (e) => {
@@ -36,19 +39,13 @@ function Signup() {
 
   const submitHandler = e => {
     e.preventDefault();
-    console.log("details", firstname, lastname, email, password, confirm);
-
     register(firstname, lastname, email, password, confirm)
       .then(result => {
-        console.log('result: ', result)
-
         if (result.status === "success") {
-          console.log("please verify your email");
-          history.push("/login")
+          setHasUserSignedUp(true);
+          // history.push("/login");
         }
         else if (result.status === "error") {
-          console.log('erroreddddd')
-          // use error message from result.message here
           setErrorMessage(result.message);
         }
       })
@@ -65,7 +62,6 @@ function Signup() {
           <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
             <div className="card card-signin my-5">
               <div className="card-body">
-                
                 <h5 className="card-title text-center">Register</h5>
                 <form className="form-signin" onSubmit={submitHandler}>
                   <div className="form-label-group">
@@ -96,6 +92,15 @@ function Signup() {
                   }
                   <hr className="my-4" />
                   <button className="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Register</button>
+                  
+
+                {hasUserSignedUp === true ? (
+                    <div className="account"> 
+                    <hr className="my-4" />
+                    <p> Your account has been created. </p>
+                        <p>Please verify your email before logging in. <span className="signup_button"><Link to={"/login"}> Sign In  </Link> </span></p>
+                    </div>
+                  ) : <p className="no_error_message"> </p>} 
                 </form>
               </div>
             </div>
