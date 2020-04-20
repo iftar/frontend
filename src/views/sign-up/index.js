@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { register } from '../../util/api'
 import {useHistory} from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 import './signup.css';
 
 // Images
-import food_del from './../../images/fooddel.png';
-import {Container, Row} from 'react-bootstrap';
-import ThemedCard from '../../components/cards/ThemedCard';
+import logo from './../../images/shareiftar-logo.png';
 
 function Signup() {
   const [firstname, setFirstName] = useState('');
@@ -15,7 +14,9 @@ function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirmPassword] = useState('');
+  const [hasUserSignedUp, setHasUserSignedUp] = useState(false);
 
+  
   const history = useHistory();
 
   const firstnameInputHandler = (e) => {
@@ -34,21 +35,18 @@ function Signup() {
     setConfirmPassword(e.target.value);
   }
 
+  const [errorMessage, setErrorMessage] = useState('');
+
   const submitHandler = e => {
     e.preventDefault();
-    console.log("details", firstname, lastname, email, password, confirm);
-
     register(firstname, lastname, email, password, confirm)
       .then(result => {
-        console.log('result: ', result)
-
         if (result.status === "success") {
-          console.log('successsss')
-          history.push("/login")
+          setHasUserSignedUp(true);
+          // history.push("/login");
         }
         else if (result.status === "error") {
-          console.log('erroreddddd')
-          // use error message from result.message here
+          setErrorMessage(result.message);
         }
       })
   }
@@ -56,43 +54,59 @@ function Signup() {
   return (
     <React.Fragment>
 
-      <Container>
-        <img className="login_image" src={food_del} alt="Alt" />
-      </Container>
-      <Container>
-        <Row>
+      <div className="container">
+        <img className="login_image" src={logo} alt="Alt" />
+      </div>
+      <div className="container">
+        <div className="row">
           <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
-            <ThemedCard>
+            <div className="card card-signin my-5">
+              <div className="card-body">
                 <h5 className="card-title text-center">Register</h5>
                 <form className="form-signin" onSubmit={submitHandler}>
                   <div className="form-label-group">
-                    <label htmlFor="first_name">First Name</label>
+                    {/* <label htmlFor="first_name">First Name</label> */}
                     <input type="text" name="first_name" className="form-control" placeholder="First Name" value={firstname} onChange={firstnameInputHandler} required autoFocus />
                   </div>
                   <div className="form-label-group">
-                    <label htmlFor="last_name">Last Name</label>
+                    {/* <label htmlFor="last_name">Last Name</label> */}
                     <input type="text" name="last_name" className="form-control" placeholder="Last Name" value={lastname} onChange={lastnameInputHandler} required />
                   </div>
 
                   <div className="form-label-group">
-                    <label htmlFor="email">Email address</label>
+                    {/* <label htmlFor="email">Email address</label> */}
                     <input type="email" name="email" className="form-control" placeholder="Enter your Email address" value={email} onChange={emailInputHandler} required />
                   </div>
                   <div className="form-label-group">
-                    <label htmlFor="password">Password</label>
+                    {/* <label htmlFor="password">Password</label> */}
                     <input type="password" name="password" className="form-control" placeholder="Enter your Password" value={password} onChange={passwordInputHandler} required />
                   </div>
                   <div className="form-label-group">
-                    <label htmlFor="confirm">Password</label>
+                    {/* <label htmlFor="confirm">Password</label> */}
                     <input type="password" name="confirm" className="form-control" placeholder="Re-enter your Password" value={confirm} onChange={confirmInputHandler} required />
                   </div>
+                  {errorMessage === '' ? (
+                    <p className="no_error_message">  </p>
+                  ) : 
+                  <p className="error_message "> {errorMessage} </p>
+                  }
                   <hr className="my-4" />
                   <button className="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Register</button>
+                  
+
+                {hasUserSignedUp === true ? (
+                    <div className="account"> 
+                    <hr className="my-4" />
+                    <p> Your account has been created. </p>
+                        <p>Please verify your email before logging in. <span className="signup_button"><Link to={"/login"}> Sign In  </Link> </span></p>
+                    </div>
+                  ) : <p className="no_error_message"> </p>} 
                 </form>
-            </ThemedCard>
+              </div>
+            </div>
           </div>
-        </Row>
-      </Container>
+        </div>
+      </div>
 
     </React.Fragment>
   )
