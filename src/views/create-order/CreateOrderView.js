@@ -293,7 +293,7 @@ const CreateOrderView = (props : Props) => {
                     custom
                     onChange={(event) => setSelectedTimeSlotIndex(event.target.value)}
                 >
-                  {selectItems.reverse()}
+                  {selectItems}
                 </Form.Control>
             </View>
           </ThemedCard>
