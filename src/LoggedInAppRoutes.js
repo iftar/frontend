@@ -13,7 +13,7 @@ import SignUpView from './views/sign-up/SignUpView'
 import './App.css';
 import View from './components/element-wrappers/View';
 import SelectCollectionPointView from './views/select-collection-point/SelectCollectionPointView';
-import CreateOrder from './views/create-order/CreateOrder';
+import CreateOrderView from './views/create-order/CreateOrder';
 import OrdersView from './views/orders/OrdersView';
 import {
   URL_CREATE_ORDER,
@@ -46,7 +46,7 @@ function LoggedInAppRoutes() {
             <SelectCollectionPointView onCollectionPointsSelected={onCollectionPointsSelected} />
           </Route>
           <Route path={URL_CREATE_ORDER}>
-            <CreateOrder collectionPoint={selectedCollectionPoint} />
+            <CreateOrderView collectionPoint={selectedCollectionPoint} />
           </Route>
           <Route path={URL_ORDERS}>
             <OrdersView />

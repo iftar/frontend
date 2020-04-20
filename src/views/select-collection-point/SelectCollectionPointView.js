@@ -14,14 +14,23 @@ import {
 import ErrorBoundary from '../../components/ErrorBoundary';
 import ThemedCard from '../../components/cards/ThemedCard';
 import LightText from '../../components/element-wrappers/LightText';
-import CanOrder from '../../models/CanOrder';
+import UserOrderCheck from '../../models/UserOrderCheck';
 import SubHeadingText from '../../components/element-wrappers/SubHeadingText';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faSadTear} from '@fortawesome/free-solid-svg-icons';
 import Header from '../../components/Header';
+import {URL_CREATE_ORDER} from '../../constants/urls';
+import {fetchCollectionPoints} from '../../store/collectionpoints/actions';
 
 type Props = {
-  onCollectionPointsSelected: (collectionPoint: CollectionPoint) => void,
+  collectionPoints: Array<CollectionPoint>,
+  error: string,
+  loading: boolean,
+  userOrderCheck: UserOrderCheck,
+
+  fetchUserOrderCheck: () => void,
+  fetchCollectionPoints: () => void,
+  selectCollectionLocation: (collectionPoint: CollectionPoint) => void,
 }
 
 function SelectCollectionPointView(props: Props) {
@@ -29,55 +38,44 @@ function SelectCollectionPointView(props: Props) {
   const [collectionPoints, setCollectionPoints] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [canOrder : CanOrder, setCanOrder] = useState(null);
+  const [canOrder : UserOrderCheck, setCanOrder] = useState(null);
 
   const history = useHistory();
 
   useEffect(() => {
-    setLoading(true);
-    setError(null);
-    fetchUserCanOrder()
-    .then(data => setCanOrder(data))
-    .catch(e => setError(e.message))
-    .finally(() => setLoading(false));
+    props.fetchUserOrderCheck()
   }, [null]);
 
   useEffect(() => {
-    setLoading(true);
-    setError(null);
-    getCollectionPoints()
-        .then(data => setCollectionPoints(data))
-        .catch(e => setError(e.message))
-        .finally(() => setLoading(false));
+    props.fetchCollectionPoints();
   }, [canOrder]);
 
-  function onBackButtonClick() {
-    history.goBack();
-  }
-
   function onCollectionPointsSelected(collectionPoint: CollectionPoint) {
-    props.onCollectionPointsSelected(collectionPoint);
+    props.selectCollectionLocation(collectionPoint);
+    history.push(URL_CREATE_ORDER);
   }
 
   function renderElements() {
-    if (loading) {
+    if (props.loading) {
       return <Loading/>;
-    } else if (error) {
-      return <Error>{error}</Error>;
-    } else if (canOrder != null && !canOrder.user_can_order) {
+    } else if (props.error) {
+      return <Error>{props.error}</Error>;
+    }
+    else if (props.userOrderCheck != null && !props.userOrderCheck.user_can_order) {
       return (
           <View>
             <ThemedCard>
               <SubHeadingText><FontAwesomeIcon icon={faSadTear}/></SubHeadingText>
               <SubHeadingText>Sorry, but you cannot order right now.</SubHeadingText>
               <br/>
-              {canOrder.messages.map(m => <LightText>{m}</LightText>)}
+              {props.userOrderCheck.messages.map(m => <LightText key={m}>{m}</LightText>)}
             </ThemedCard>
           </View>
       )
-    } else {
+    }
+    else {
       return (
-          collectionPoints.map(collectionPoint =>
+          props.collectionPoints.map(collectionPoint =>
               <SingleCollectionPointView
                   key={collectionPoint.id}
                   collectionPoint={collectionPoint}

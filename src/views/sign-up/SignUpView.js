@@ -8,7 +8,11 @@ import './signup.css';
 // Images
 import logo from '../../assets/images/shareiftar-logo.png';
 
-function SignUpView() {
+type Props = {
+  login: (email: string, password: string) => void,
+}
+
+function SignUpView(props: Props) {
   const [firstname, setFirstName] = useState('');
   const [lastname, setLastName] = useState('');
   const [email, setEmail] = useState('');

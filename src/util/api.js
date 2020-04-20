@@ -5,7 +5,7 @@ import User from '../models/User';
 import Logger from './Logger';
 import CollectionPoint from '../models/CollectionPoint';
 import OrderRequest from '../models/OrderRequest';
-import CanOrder from '../models/CanOrder';
+import UserOrderCheck from '../models/UserOrderCheck';
 
 const BASE_URL = 'https://share-your-iftar-backend.herokuapp.com/api';
 const LOCATION_URL = BASE_URL + "/collection-points";
@@ -167,7 +167,7 @@ export async function createOrder(orderRequest: OrderRequest) {
   }
 }
 
-export async function fetchUserCanOrder() : CanOrder {
+export async function fetchUserCanOrder() : UserOrderCheck {
   let response;
 
   try {
@@ -178,7 +178,7 @@ export async function fetchUserCanOrder() : CanOrder {
     });
     const data = response.data;
     logger.info("data: ", data);
-    return Object.assign(new CanOrder(), data.data.check);
+    return Object.assign(new UserOrderCheck(), data.data.check);
   } catch (error) {
     logger.error("error: ", error.response);
     throw new Error(error.response.data);

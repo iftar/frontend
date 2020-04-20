@@ -9,8 +9,16 @@ import logo from './../../assets/images/shareiftar-logo.png';
 import {Col, Container, Row} from 'react-bootstrap';
 import ThemedCard from '../../components/cards/ThemedCard';
 import {URL_SELECT_LOCATION} from '../../constants/urls';
+import Loading from '../../components/Loading';
+import Error from '../../components/Error';
 
-function LoginView() {
+type Props = {
+  loading: boolean,
+  error: string,
+  login: (email: string, password: string) => void,
+}
+
+function LoginView(props : Props) {
   const [email, setEmail] = useState('dilwoar.hussain+dummy@gmail.com');
   const [password, setPassword] = useState('password');
 
@@ -27,16 +35,36 @@ function LoginView() {
     e.preventDefault();
     console.log("email and password", email, password);
 
-    login(email, password)
-      .then(result => {
-        if (result.status === "success") {
-          // update redirect to use browserHistory
-          history.push(URL_SELECT_LOCATION)
-        }
-        else if (result.status === "error") {
-          // use error message from result.message here
-        }
-      })
+    props.login(email, password);
+  };
+
+  function renderElements() {
+    if (props.loading) {
+      return <Loading/>
+    } else {
+      return (
+          <Container>
+            {props.error && <Error>{props.error}</Error>}
+          <form className="form-signin" onSubmit={submitHandler}>
+            <div className="form-label-group">
+              <label htmlFor="email">Email address</label>
+              <input type="email" name="email" className="form-control" placeholder="Enter your Email address" value={email} onChange={emailInputHandler} required autoFocus />
+            </div>
+            <div className="form-label-group">
+              <label htmlFor="password">Password</label>
+              <input type="password" name="password" className="form-control" placeholder="Enter your Password" value={password} onChange={passwordInputHandler} required />
+            </div>
+            <p className="forgot_password"> Forgot Password? </p>
+            <hr className="my-4" />
+            <button className="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button>
+            <div className="account">
+              <p>Not a member yet? <span className="signup_button"><Link to={"/sign-up"}> Sign up  </Link> </span></p>
+            </div>
+          </form>
+          </Container>
+
+      )
+    }
   }
 
   return (
@@ -49,22 +77,7 @@ function LoginView() {
           <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
             <ThemedCard>
               <h5 className="card-title text-center">Sign In</h5>
-              <form className="form-signin" onSubmit={submitHandler}>
-                <div className="form-label-group">
-                  <label htmlFor="email">Email address</label>
-                  <input type="email" name="email" className="form-control" placeholder="Enter your Email address" value={email} onChange={emailInputHandler} required autoFocus />
-                </div>
-                <div className="form-label-group">
-                  <label htmlFor="password">Password</label>
-                  <input type="password" name="password" className="form-control" placeholder="Enter your Password" value={password} onChange={passwordInputHandler} required />
-                </div>
-                <p className="forgot_password"> Forgot Password? </p>
-                <hr className="my-4" />
-                <button className="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button>
-                <div className="account">
-                  <p>Not a member yet? <span className="signup_button"><Link to={"/sign-up"}> Sign up  </Link> </span></p>
-                </div>
-              </form>
+              {renderElements()}
             </ThemedCard>
           </div>
         </Row>

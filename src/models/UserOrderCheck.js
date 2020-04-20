@@ -1,4 +1,4 @@
-class CanOrder {
+class UserOrderCheck {
   user_can_order: boolean;
   user_has_ordered_today: boolean;
   time_passed_daily_deadline: boolean;
@@ -14,4 +14,4 @@ class CanOrder {
   }
 }
 
-export default CanOrder;
+export default UserOrderCheck;

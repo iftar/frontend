@@ -15,49 +15,53 @@ import moment from 'moment';
 import Logger from '../../util/Logger';
 import each from 'lodash/each'
 import Header from '../../components/Header';
+import Order from '../../models/Order';
+import {fetchOrders} from '../../store/orders/actions';
 
-function OrdersView(props) {
+type Props = {
+  orders: Array<Order>,
+  loading: boolean,
+  error: string,
+
+  fetchOrders: () => void,
+}
+
+function OrdersView(props : Props) {
   const logger = new Logger(OrdersView.name);
 
-  const [orders, setOrders] = useState([]);
   const [todaysOrders, setTodaysOrders] = useState([]);
   const [historicOrders, setHistoricOrders] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
 
   const history = useHistory();
 
   useEffect(() => {
-    const currentDate = moment().date();
-
-    setLoading(true);
-    setError(null);
-    getOrders().
-        then(data => {
-          let ordersForToday = [];
-          let ordersForHistory = [];
-
-          each(data, (d) => {
-            const orderDate = moment(d.required_date).date();
-            if(orderDate === currentDate) {
-              ordersForToday.push(d);
-            } else {
-              ordersForHistory.push(d);
-            }
-          });
-
-          setTodaysOrders(ordersForToday);
-          setHistoricOrders(ordersForHistory);
-        }).
-        catch(err => setError(err.message)).
-        finally(() => setLoading(false));
+    props.fetchOrders();
   }, [null]);
 
+  useEffect(() => {
+    const currentDate = moment().date();
+
+    let ordersForToday = [];
+    let ordersForHistory = [];
+
+    each(props.orders, (d) => {
+      const orderDate = moment(d.required_date).date();
+      if(orderDate === currentDate) {
+        ordersForToday.push(d);
+      } else {
+        ordersForHistory.push(d);
+      }
+    });
+
+    setTodaysOrders(ordersForToday);
+    setHistoricOrders(ordersForHistory);
+  }, [props.orders]);
+
   function renderElements() {
-    if (loading) {
+    if (props.loading) {
       return <Loading/>;
-    } else if (error) {
-      return <Error>{error}</Error>;
+    } else if (props.error) {
+      return <Error>{props.error}</Error>;
     } else {
       return (
           <Fragment>

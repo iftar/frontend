@@ -27,8 +27,8 @@ type Props = {
   collectionPoint: CollectionPoint
 }
 
-const CreateOrder = (props : Props) => {
-  const logger = new Logger(CreateOrder.name);
+const CreateOrderView = (props : Props) => {
+  const logger = new Logger(CreateOrderView.name);
   const IFTAR_ORDER_LIMIT = 10;
 
   const collectionPoint = props.collectionPoint;
@@ -341,4 +341,4 @@ const CreateOrder = (props : Props) => {
 
 };
 
-export default CreateOrder
+export default CreateOrderView;
