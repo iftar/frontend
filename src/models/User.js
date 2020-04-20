@@ -24,3 +24,5 @@ class User {
     this.created_at = created_at;
   }
 }
+
+export default User;
