@@ -72,7 +72,7 @@ function LoginView(props : Props) {
       <Container>
         <img className="login_image" src={logo} alt="Alt" />
       </Container>
-      <Container>
+      <Container style={{marginBottom: "50px"}}>
         <Row>
           <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
             <ThemedCard>
