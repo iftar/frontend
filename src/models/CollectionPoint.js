@@ -1,6 +1,7 @@
 import CollectionPointTimeSlot from './CollectionPointTimeSlot';
 
 class CollectionPoint {
+  id: number;
   name: string;
   address_line_1: string;
   address_line_2: string;
@@ -13,10 +14,11 @@ class CollectionPoint {
   collection_point_time_slots: Array<CollectionPointTimeSlot>;
 
   constructor(
-      name: string, address_line_1: string, address_line_2: string,
+      id: number, name: string, address_line_1: string, address_line_2: string,
       city: string, county: string, post_code: string,
       max_daily_capacity: string, created_at: Date, updated_at: Date,
       collection_point_time_slots: Array<CollectionPointTimeSlot>) {
+    this.id = id;
     this.name = name;
     this.address_line_1 = address_line_1;
     this.address_line_2 = address_line_2;

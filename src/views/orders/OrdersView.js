@@ -13,6 +13,8 @@ import ErrorBoundary from '../../components/ErrorBoundary';
 import {useHistory} from 'react-router-dom';
 import moment from 'moment';
 import Logger from '../../util/Logger';
+import each from 'lodash/each'
+import Header from '../../components/Header';
 
 function OrdersView(props) {
   const logger = new Logger(OrdersView.name);
@@ -32,21 +34,24 @@ function OrdersView(props) {
     setError(null);
     getOrders().
         then(data => {
-          setTodaysOrders(data.filter(d => {
+          let ordersForToday = [];
+          let ordersForHistory = [];
+
+          each(data, (d) => {
             const orderDate = moment(d.required_date).date();
-            logger.info("order date", orderDate);
-            logger.info("current date", currentDate);
-            return orderDate === currentDate;
-          }));
-          setHistoricOrders(data.filter(d => moment(d.required_date).date() !== currentDate));
+            if(orderDate === currentDate) {
+              ordersForToday.push(d);
+            } else {
+              ordersForHistory.push(d);
+            }
+          });
+
+          setTodaysOrders(ordersForToday);
+          setHistoricOrders(ordersForHistory);
         }).
         catch(err => setError(err.message)).
         finally(() => setLoading(false));
   }, [null]);
-
-  function onBackButtonClick() {
-    history.goBack();
-  }
 
   function renderElements() {
     if (loading) {
@@ -73,16 +78,7 @@ function OrdersView(props) {
           paddingBottom: '40px',
           paddingTop: '40px',
         }}>
-          <View style={{
-            display: 'flex',
-            width: '100%',
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-          }}>
-            <CircleIconButton onClick={onBackButtonClick}/>
-            <HeadingText style={{fontWeight: 'bold', fontSize: '2em'}}>My
-              Orders</HeadingText>
-          </View>
+          <Header title={"My Orders"}/>
           {renderElements()}
         </Container>
       </ErrorBoundary>

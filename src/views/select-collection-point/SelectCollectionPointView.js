@@ -1,22 +1,24 @@
 import React, {Fragment, useEffect, useState} from 'react';
 
-import "./location.css";
-import data from "./location-data.json";
-import iftarImg from "../../assets/images/iftar.png";
-import bluePin from "../../assets/images/bluepin.png";
-import backBtn from "../../assets/images/back_btn.svg";
 import {Card, Container, Row} from 'react-bootstrap';
-import CircleIconButton from '../../components/button/CircleIconButton';
-import HeadingText from '../../components/element-wrappers/HeadingText';
 import View from '../../components/element-wrappers/View';
 import {useHistory} from 'react-router-dom';
 import Loading from '../../components/Loading';
 import Error from '../../components/Error';
-import OrdersTodayView from '../orders/OrdersTodayView';
-import OrdersHistoryView from '../orders/OrdersHistoryView';
 import SingleCollectionPointView from './SingleCollectionPointView';
 import CollectionPoint from '../../models/CollectionPoint';
-import {getCollectionPoints} from '../../util/api';
+import {
+  fetchUserCanOrder,
+  getCollectionPoints,
+} from '../../util/api';
+import ErrorBoundary from '../../components/ErrorBoundary';
+import ThemedCard from '../../components/cards/ThemedCard';
+import LightText from '../../components/element-wrappers/LightText';
+import CanOrder from '../../models/CanOrder';
+import SubHeadingText from '../../components/element-wrappers/SubHeadingText';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faSadTear} from '@fortawesome/free-solid-svg-icons';
+import Header from '../../components/Header';
 
 type Props = {
   onCollectionPointsSelected: (collectionPoint: CollectionPoint) => void,
@@ -27,8 +29,18 @@ function SelectCollectionPointView(props: Props) {
   const [collectionPoints, setCollectionPoints] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [canOrder : CanOrder, setCanOrder] = useState(null);
 
   const history = useHistory();
+
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+    fetchUserCanOrder()
+    .then(data => setCanOrder(data))
+    .catch(e => setError(e.message))
+    .finally(() => setLoading(false));
+  }, [null]);
 
   useEffect(() => {
     setLoading(true);
@@ -37,7 +49,7 @@ function SelectCollectionPointView(props: Props) {
         .then(data => setCollectionPoints(data))
         .catch(e => setError(e.message))
         .finally(() => setLoading(false));
-  }, [null]);
+  }, [canOrder]);
 
   function onBackButtonClick() {
     history.goBack();
@@ -52,28 +64,46 @@ function SelectCollectionPointView(props: Props) {
       return <Loading/>;
     } else if (error) {
       return <Error>{error}</Error>;
+    } else if (canOrder != null && !canOrder.user_can_order) {
+      return (
+          <View>
+            <ThemedCard>
+              <SubHeadingText><FontAwesomeIcon icon={faSadTear}/></SubHeadingText>
+              <SubHeadingText>Sorry, but you cannot order right now.</SubHeadingText>
+              <br/>
+              {canOrder.messages.map(m => <LightText>{m}</LightText>)}
+            </ThemedCard>
+          </View>
+      )
     } else {
       return (
-          <Fragment>
-            {collectionPoints.map(collectionPoint => <SingleCollectionPointView
-                collectionPoint={collectionPoint}
-                onClick={() => onCollectionPointsSelected(collectionPoint)}
-            />)}
-          </Fragment>
+          collectionPoints.map(collectionPoint =>
+              <SingleCollectionPointView
+                  key={collectionPoint.id}
+                  collectionPoint={collectionPoint}
+                  onClick={() => onCollectionPointsSelected(collectionPoint)}
+              />)
       );
     }
   }
 
   return (
-    <Container style={{display: "flex", flexDirection: "column", alignItems: "center", height: "100%", paddingBottom: "40px"}}>
-      <View style={{display: "flex", width: "100%", justifyContent: "flex-start", alignItems: "center"}}>
-        <CircleIconButton onClick={onBackButtonClick}/>
-        <HeadingText style={{fontWeight: "bold", fontSize: "2em"}}>Select a Collection Point</HeadingText>
-      </View>
-      <View style={{display: "flex", flexDirection: "column", width: "100%", height: "100%", justifyContent: "flex-start", alignItems: "center"}}>
-        {renderElements()}
-      </View>
-    </Container>
+
+      <ErrorBoundary>
+        <Container style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          minHeight: '100%',
+          paddingBottom: '40px',
+          paddingTop: '40px',
+        }}>
+          <Header title={"Select Collection Point"}/>
+          <View style={{display: "flex", flexDirection: "column", width: "100%", justifyContent: "flex-start", alignItems: "center"}}>
+            {renderElements()}
+          </View>
+        </Container>
+      </ErrorBoundary>
   );
 }
 

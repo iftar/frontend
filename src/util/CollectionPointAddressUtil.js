@@ -20,7 +20,7 @@ class CollectionPointAddressUtil {
       fullAddress += collectionPoint.post_code + ", ";
     }
 
-    return fullAddress;
+    return fullAddress.substring(0, fullAddress.length - 2);
   }
 }
 

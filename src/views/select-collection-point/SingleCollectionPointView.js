@@ -1,27 +1,13 @@
 import React, {Fragment, useState} from 'react';
 
-import "./location.css";
-import data from "./location-data.json";
 import iftarImg from "../../assets/images/iftar.png";
-import bluePin from "../../assets/images/bluepin.png";
-import backBtn from "../../assets/images/back_btn.svg";
 import {Button, Card, Container, Row} from 'react-bootstrap';
-import CircleIconButton from '../../components/button/CircleIconButton';
-import HeadingText from '../../components/element-wrappers/HeadingText';
 import View from '../../components/element-wrappers/View';
-import {useHistory} from 'react-router-dom';
-import Loading from '../../components/Loading';
-import Error from '../../components/Error';
-import OrdersTodayView from '../orders/OrdersTodayView';
-import OrdersHistoryView from '../orders/OrdersHistoryView';
 import ThemedCard from '../../components/cards/ThemedCard';
 import CollectionPoint from '../../models/CollectionPoint';
-import SubHeadingText from '../../components/element-wrappers/SubHeadingText';
 import IconWithTextPanel from '../../components/icons/IconWithTextPanel';
 import {faBox, faMapPin} from '@fortawesome/free-solid-svg-icons';
 import Text from '../../components/element-wrappers/Text';
-
-const locationList = data.data.collection_points.data;
 
 type Props = {
   collectionPoint: CollectionPoint,
@@ -37,7 +23,7 @@ function SingleCollectionPointView(props: Props) {
   }
 
   return (
-      <View style={{display: "flex", width: "100%", justifyContent: "flex-start", alignItems: "center"}}>
+      <View style={{display: "flex", flex:1, width: "100%", justifyContent: "flex-start", alignItems: "center"}}>
         <ThemedCard>
           <View style={{display: "flex", flexDirection: "row", justifyContent: "space-around", alignItems: "center",  width: "100%"}}>
             <SingleCollectionImage/>

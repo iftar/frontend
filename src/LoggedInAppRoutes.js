@@ -13,7 +13,7 @@ import SignUp from './views/sign-up'
 import './App.css';
 import View from './components/element-wrappers/View';
 import SelectCollectionPointView from './views/select-collection-point/SelectCollectionPointView';
-import CreateOrder from './views/create-order';
+import CreateOrder from './views/create-order/CreateOrder';
 import OrdersView from './views/orders/OrdersView';
 import {
   URL_CREATE_ORDER,

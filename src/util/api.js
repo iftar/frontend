@@ -4,6 +4,8 @@ import Order from '../models/Order';
 import User from '../models/User';
 import Logger from './Logger';
 import CollectionPoint from '../models/CollectionPoint';
+import OrderRequest from '../models/OrderRequest';
+import CanOrder from '../models/CanOrder';
 
 const BASE_URL = 'https://share-your-iftar-backend.herokuapp.com/api';
 const LOCATION_URL = BASE_URL + "/collection-points";
@@ -19,6 +21,10 @@ const logger = new Logger('api');
 
 export function getUserToken() {
   return getItem(USER_TOKEN_KEY);
+}
+
+export function getUser() : User {
+  return Object.assign(User, JSON.parse(getItem(USER_KEY)));
 }
 
 export async function login(email, password) {
@@ -114,14 +120,38 @@ export async function getOrders() : Array<Order> {
 
     logger.info('response data', data);
 
-    return appData.orders.map(order => Object.assign(Order, order));
+    return appData.orders.map(order => Object.assign(new Order(), order));
   } catch (error) {
     logger.error(error.message);
     throw new Error('Failed to fetch orders');
   }
 }
 
-export async function canUserPlaceOrder() {
+export async function createOrder(orderRequest: OrderRequest) {
+  const token = getUserToken();
+
+  let response;
+
+  try {
+    response = await axios.post(`${BASE_URL}/user/orders`, orderRequest, {
+      headers: {
+        'Authorization': 'Bearer ' + token,
+      },
+    });
+
+    const data = response.data;
+    const appData = data.data;
+
+    logger.info('response data', data);
+
+    return Object.assign(new Order(), appData.order);
+  } catch (error) {
+    logger.error(error.message);
+    throw new Error('Failed to fetch orders');
+  }
+}
+
+export async function fetchUserCanOrder() : CanOrder {
   let response;
 
   try {
@@ -132,7 +162,7 @@ export async function canUserPlaceOrder() {
     });
     const data = response.data;
     logger.info("data: ", data);
-    return data.data.check.user_can_order;
+    return Object.assign(new CanOrder(), data.data.check);
   } catch (error) {
     logger.error("error: ", error.response);
     throw new Error(error.response.data);
