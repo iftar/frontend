@@ -5,12 +5,12 @@ import { Link } from "react-router-dom";
 import {useHistory} from 'react-router-dom'
 
 // Images
-import food_del from './../../images/fooddel.png';
+import logo from './../../assets/images/shareiftar-logo.png';
 import {Col, Container, Row} from 'react-bootstrap';
 import ThemedCard from '../../components/cards/ThemedCard';
 import {URL_SELECT_LOCATION} from '../../constants/urls';
 
-function Login() {
+function LoginView() {
   const [email, setEmail] = useState('dilwoar.hussain+dummy@gmail.com');
   const [password, setPassword] = useState('password');
 
@@ -42,7 +42,7 @@ function Login() {
   return (
     <React.Fragment>
       <Container>
-        <img className="login_image" src={food_del} alt="Alt" />
+        <img className="login_image" src={logo} alt="Alt" />
       </Container>
       <Container>
         <Row>
@@ -73,4 +73,4 @@ function Login() {
   )
 }
 
-export default Login
+export default LoginView;

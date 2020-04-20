@@ -8,11 +8,11 @@ import {
 } from 'react-router-dom';
 
 import './App.css';
-import {getUserDetails, getUserToken} from './util/api';
+import {getUserDetails, getUserToken, logout} from './util/api';
 import View from './components/element-wrappers/View';
 import LoggedInAppRoutes from './LoggedInAppRoutes';
 import NotLoggedInAppRoutes from './NotLoggedInAppRoutes';
-import {Navbar, Nav, NavDropdown} from 'react-bootstrap'
+import {Navbar, Nav, NavDropdown, Image, Button} from 'react-bootstrap';
 import HeadingText from './components/element-wrappers/HeadingText';
 import {
   URL_CREATE_ORDER, URL_LOGIN,
@@ -20,6 +20,7 @@ import {
   URL_SELECT_LOCATION, URL_SIGN_UP,
 } from './constants/urls';
 import LightText from './components/element-wrappers/LightText';
+import logo from './assets/images/shareiftar-logo.png';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
@@ -30,7 +31,6 @@ function App() {
     getUserDetails()
         .then(() => setIsLoggedIn(true))
         .catch(() => setIsLoggedIn(false));
-    window.scrollTo(0, 0);
   }, [location.pathname]);
 
   function renderElements() {
@@ -48,7 +48,7 @@ function App() {
   return (
       <Fragment>
       <View style={{textAlign: "center", height: "100%", overflowY: "scroll", marginBottom: "100px"}}>
-        <Navigation/>
+        <Navigation isLoggedIn={isLoggedIn}/>
         {renderElements()}
         {/*<FooterNav/>*/}
       </View>
@@ -56,7 +56,8 @@ function App() {
   );
 }
 
-function Navigation() {
+function Navigation(props) {
+
   return (
       <View style={{
         display: 'flex',
@@ -66,7 +67,9 @@ function Navigation() {
         justifyContent: 'center',
       }}>
         <Navbar expand={false} style={{width: "100%"}}>
-          <Navbar.Brand><HeadingText>Share Iftar</HeadingText></Navbar.Brand>
+          <Navbar.Brand>
+            <Image src={logo} height={"60px"} />
+          </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="">
             <Nav className="mr-auto">
@@ -74,8 +77,14 @@ function Navigation() {
               <Nav.Link href="/create-order">Create Order</Nav.Link>
               <Nav.Link href="/orders">My orders</Nav.Link>
               <NavDropdown.Divider />
-              <Nav.Link href="/login">Login</Nav.Link>
-              <Nav.Link href="/sign-up">Sign up</Nav.Link>
+              {props.isLoggedIn ?
+                  <Button variant={"info"} block onClick={logout}>Logout</Button>
+                  :
+                  <Fragment>
+                    <Nav.Link  href="/login">Login</Nav.Link>
+                    <Nav.Link href="/sign-up">Sign up</Nav.Link>
+                  </Fragment>
+              }
             </Nav>
           </Navbar.Collapse>
         </Navbar>

@@ -6,9 +6,9 @@ import { Link } from "react-router-dom";
 import './signup.css';
 
 // Images
-import logo from './../../images/shareiftar-logo.png';
+import logo from '../../assets/images/shareiftar-logo.png';
 
-function Signup() {
+function SignUpView() {
   const [firstname, setFirstName] = useState('');
   const [lastname, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -114,4 +114,4 @@ function Signup() {
 
 }
 
-export default Signup
+export default SignUpView

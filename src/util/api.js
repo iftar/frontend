@@ -53,6 +53,22 @@ export async function login(email, password) {
   }
 }
 
+export async function logout() {
+  const token = getItem("userToken");
+  let response;
+  try {
+    response = await axios.get(`${BASE_URL}/logout`, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    return response.status === 200;
+  } catch (error) {
+    logger.error("error: ", error.message);
+    throw new Error(error.message);
+  }
+}
+
 export async function register(firstname, lastname, email, password, confirm) {
   let response;
 

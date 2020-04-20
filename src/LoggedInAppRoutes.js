@@ -7,8 +7,8 @@ import {
   useHistory, Redirect,
 } from 'react-router-dom';
 
-import Login from './views/login'
-import SignUp from './views/sign-up'
+import LoginView from './views/login/LoginView'
+import SignUpView from './views/sign-up/SignUpView'
 
 import './App.css';
 import View from './components/element-wrappers/View';
@@ -37,10 +37,10 @@ function LoggedInAppRoutes() {
       <View style={{height: "100%", overflowY: "scroll"}}>
         <Switch>
           <Route path={URL_LOGIN}>
-            <Login />
+            <LoginView />
           </Route>
           <Route path={URL_SIGN_UP}>
-            <SignUp />
+            <SignUpView />
           </Route>
           <Route path={URL_SELECT_LOCATION}>
             <SelectCollectionPointView onCollectionPointsSelected={onCollectionPointsSelected} />
