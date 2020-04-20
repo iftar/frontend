@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect, useState} from 'react';
+import React, {Fragment, useEffect, useRef, useState} from 'react';
 import { Container, Card, Form, ButtonGroup, ToggleButton, Button } from 'react-bootstrap';
 import HeadingText from '../../components/element-wrappers/HeadingText';
 import CircleIconButton from '../../components/button/CircleIconButton';
@@ -22,8 +22,12 @@ import CreateOrderConfirmationDialogue from './CreateOrderConfirmationDialogue';
 import {createOrder, getUser} from '../../util/api';
 import OrderRequest from '../../models/OrderRequest';
 import Header from '../../components/Header';
+import User from '../../models/User';
+import ordersService from '../../services/ordersService';
 
 type Props = {
+  user: User,
+  token: string,
   collectionPoint: CollectionPoint
 }
 
@@ -32,6 +36,8 @@ const CreateOrderView = (props : Props) => {
   const IFTAR_ORDER_LIMIT = 10;
 
   const collectionPoint = props.collectionPoint;
+
+  const formRef = useRef();
 
   const [iftarOrderQuantities, setIftarOrderQuantities] = useState([]);
 
@@ -75,27 +81,25 @@ const CreateOrderView = (props : Props) => {
     history.goBack();
   }
 
-  function onOrderSubmit(event) {
-    const form = event.currentTarget;
+  function onOrderSubmit() {
+    // const form = event.currentTarget;
     setIsFormValidated(true);
-    if (form.checkValidity() === true) {
+    // if (formRef.checkValidity() === true) {
       logger.info("success validation")
       const order = createOrderRequest();
       setOrderRequest(order);
-    } else {
-      logger.info("failed validation")
-    }
-    event.preventDefault();
-    event.stopPropagation();
+    // } else {
+    //   logger.info("failed validation")
+    // }
+    // event.preventDefault();
+    // event.stopPropagation();
   }
 
   function onOrderConfirm() {
     setLoading(true);
     setError(null);
-    createOrder(orderRequest)
-        .then((data) => {
-          history.push(URL_ORDERS);
-    })
+    ordersService.createOrder(props.token, orderRequest)
+        .then((data) => history.push(URL_ORDERS))
         .catch((error) => setError(error.message))
         .finally(() => setLoading(false))
   }
@@ -113,7 +117,7 @@ const CreateOrderView = (props : Props) => {
   }
 
   function createOrderRequest() {
-    const user = getUser();
+    const user = props.user;
     const orderRequest = new OrderRequest();
     orderRequest.first_name = user.first_name;
     orderRequest.last_name = user.last_name;
@@ -305,7 +309,7 @@ const CreateOrderView = (props : Props) => {
     } else {
       return (
           <Fragment>
-            <Form validated={isFormValidated} onSubmit={onOrderSubmit}>
+            <Form ref={formRef} validated={isFormValidated}>
 
               <CollectionCenterDetailsPanel collectionPoint={collectionPoint}/>
 
@@ -315,7 +319,7 @@ const CreateOrderView = (props : Props) => {
 
               <SelectTimePanel/>
 
-              <Button type={"submit"} variant="primary" size={"lg"} block>Submit Order</Button>
+              <Button type={"button"} variant="primary" size={"lg"} block onClick={onOrderSubmit}>Submit Order</Button>
             </Form>
 
             {orderRequest != null && <CreateOrderConfirmationDialogue onClose={onOrderCancel} onConfirm={onOrderConfirm} orderRequest={orderRequest}/>}

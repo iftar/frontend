@@ -5,6 +5,8 @@ import CreateOrderView from './CreateOrderView';
 
 
 const mapStateToProps = (state) => ({
+  user: state.auth.user,
+  token: state.auth.token,
   collectionPoint: state.currentorder.collectionPoint,
 });
 
