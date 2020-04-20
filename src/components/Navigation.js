@@ -33,12 +33,14 @@ function Navigation(props : Props) {
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="">
             <Nav className="mr-auto">
-              <Nav.Link href="/select-location">Select Location</Nav.Link>
-              <Nav.Link href="/create-order">Create Order</Nav.Link>
-              <Nav.Link href="/orders">My orders</Nav.Link>
-              <NavDropdown.Divider />
               {props.user != null ?
-                  <Button variant={"info"} block onClick={logout}>Logout</Button>
+                  <Fragment>
+                    <Nav.Link href="/select-location">Select Location</Nav.Link>
+                    <Nav.Link href="/create-order">Create Order</Nav.Link>
+                    <Nav.Link href="/orders">My orders</Nav.Link>
+                    <NavDropdown.Divider />
+                    <Button variant={"info"} block onClick={logout}>Logout</Button>
+                  </Fragment>
                   :
                   <Fragment>
                     <Nav.Link  href="/login">Login</Nav.Link>
