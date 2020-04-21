@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import * as Sentry from '@sentry/browser';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App';
@@ -7,6 +8,8 @@ import * as serviceWorker from './serviceWorker';
 import {BrowserRouter as Router} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import store from './store/configureStore'
+
+if (process.env.SENTRY_DSN) Sentry.init({dsn: process.env.SENTRY_DSN});
 
 ReactDOM.render(
     <React.StrictMode>
