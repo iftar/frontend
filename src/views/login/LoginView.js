@@ -47,11 +47,9 @@ function LoginView(props : Props) {
             {props.error && <Error>{props.error}</Error>}
           <form className="form-signin" onSubmit={submitHandler}>
             <div className="form-label-group">
-              <label htmlFor="email">Email address</label>
               <input type="email" name="email" className="form-control" placeholder="Enter your Email address" value={email} onChange={emailInputHandler} required autoFocus />
             </div>
             <div className="form-label-group">
-              <label htmlFor="password">Password</label>
               <input type="password" name="password" className="form-control" placeholder="Enter your Password" value={password} onChange={passwordInputHandler} required />
             </div>
             <p className="forgot_password"> Forgot Password? </p>
