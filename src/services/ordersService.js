@@ -3,7 +3,8 @@ import {BASE_URL} from '../constants/api';
 import Logger from '../util/Logger';
 import User from '../models/User';
 import Order from '../models/Order';
-import OrderRequest from '../models/OrderRequest';
+import OrderCreation from '../models/OrderCreation';
+import OrderCreationServerRequest from '../models/OrderCreationServerRequest';
 
 class OrdersService {
   constructor() {
@@ -30,9 +31,9 @@ class OrdersService {
     }
   };
 
-  createOrder = async function (token: string, orderRequest : OrderRequest) {
+  createOrder = async function (token: string, orderServerRequest : OrderCreationServerRequest) : Order {
     try {
-      const response = await axios.post(`${BASE_URL}/api/user/orders`, orderRequest, {
+      const response = await axios.post(`${BASE_URL}/api/user/orders`, orderServerRequest, {
         headers: {
           'Authorization': 'Bearer ' + token,
         },

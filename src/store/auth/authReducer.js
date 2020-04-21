@@ -65,11 +65,17 @@ function authReducer(state = INITIAL_STATE, action) {
         ...state,
         userOrderCheck: action.payload
       };
+    case types.REFRESH_LOGIN_REQUEST:
+      return {
+        ...state,
+        loading: true
+      };
     case types.REFRESH_LOGIN:
       return {
         ...state,
         user: action.payload.user,
         token: action.payload.token,
+        loading: false,
       };
     default:
       return state;

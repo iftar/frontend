@@ -1,5 +1,4 @@
 import * as types from './actionTypes';
-import {getOrders} from '../../util/api';
 import Order from '../../models/Order';
 import ordersService from '../../services/ordersService';
 

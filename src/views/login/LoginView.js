@@ -11,6 +11,9 @@ import ThemedCard from '../../components/cards/ThemedCard';
 import {URL_SELECT_LOCATION} from '../../constants/urls';
 import Loading from '../../components/Loading';
 import Error from '../../components/Error';
+import View from '../../components/element-wrappers/View';
+import PaddedScrollableYView
+  from '../../components/views/PaddedScrollableYView';
 
 type Props = {
   loading: boolean,
@@ -19,8 +22,8 @@ type Props = {
 }
 
 function LoginView(props : Props) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('dilwoar.hussain+dummy@gmail.com');
+  const [password, setPassword] = useState('password');
 
   const history = useHistory();
 
@@ -66,7 +69,7 @@ function LoginView(props : Props) {
   }
 
   return (
-    <React.Fragment>
+    <PaddedScrollableYView>
       <Container>
         <img className="login_image" src={logo} alt="Alt" />
       </Container>
@@ -80,7 +83,7 @@ function LoginView(props : Props) {
           </div>
         </Row>
       </Container>
-    </React.Fragment>
+    </PaddedScrollableYView>
   )
 }
 

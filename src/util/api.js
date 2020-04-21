@@ -1,15 +1,9 @@
 import axios from 'axios';
 import { getItem, saveItem } from './storage';
-import Order from '../models/Order';
 import User from '../models/User';
 import Logger from './Logger';
-import CollectionPoint from '../models/CollectionPoint';
-import OrderRequest from '../models/OrderRequest';
-import UserOrderCheck from '../models/UserOrderCheck';
 
 const BASE_URL = 'https://share-your-iftar-backend.herokuapp.com/api';
-const LOCATION_URL = BASE_URL + "/collection-points";
-const ORDER_CHECK_URL = "https://share-your-iftar-backend.herokuapp.com//api/user/orders/check";
 
 const USER_TOKEN_KEY = 'userToken';
 const USER_KEY = 'user';
@@ -53,22 +47,6 @@ export async function login(email, password) {
   }
 }
 
-export async function logout() {
-  const token = getItem("userToken");
-  let response;
-  try {
-    response = await axios.get(`${BASE_URL}/logout`, {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    });
-    return response.status === 200;
-  } catch (error) {
-    logger.error("error: ", error.message);
-    throw new Error(error.message);
-  }
-}
-
 export async function register(firstname, lastname, email, password, confirm) {
   let response;
 
@@ -89,116 +67,5 @@ export async function register(firstname, lastname, email, password, confirm) {
   } catch (error) {
     console.log('error: ', error.response);
     return error.response.data;
-  }
-}
-
-export async function getUserDetails() {
-  const token = getUserToken();
-
-  let response;
-
-  try {
-    response = await axios.get(`${BASE_URL}/user`, {
-      headers: {
-        'Authorization': 'Bearer ' + token,
-      },
-    });
-
-    const data = response.data;
-    const appData = data.data;
-
-    logger.info('response data', data);
-
-    return Object.assign(User, appData.user);
-  } catch (error) {
-    logger.error(error.message);
-    throw new Error('Failed to fetch user details');
-  }
-}
-
-// --------------------------
-// ORDER API FUNCTIONS
-
-export async function getOrders() : Array<Order> {
-  const token = getUserToken();
-
-  let response;
-
-  try {
-    response = await axios.get(`${BASE_URL}/user/orders`, {
-      headers: {
-        'Authorization': 'Bearer ' + token,
-      },
-    });
-
-    const data = response.data;
-    const appData = data.data;
-
-    logger.info('response data', data);
-
-    return appData.orders.map(order => Object.assign(new Order(), order));
-  } catch (error) {
-    logger.error(error.message);
-    throw new Error('Failed to fetch orders');
-  }
-}
-
-export async function createOrder(orderRequest: OrderRequest) {
-  const token = getUserToken();
-
-  let response;
-
-  try {
-    response = await axios.post(`${BASE_URL}/user/orders`, orderRequest, {
-      headers: {
-        'Authorization': 'Bearer ' + token,
-      },
-    });
-
-    const data = response.data;
-    const appData = data.data;
-
-    logger.info('response data', data);
-
-    return Object.assign(new Order(), appData.order);
-  } catch (error) {
-    logger.error(error.message);
-    throw new Error('Failed to fetch orders');
-  }
-}
-
-export async function fetchUserCanOrder() : UserOrderCheck {
-  let response;
-
-  try {
-    response = await axios.get(`${BASE_URL}/user/orders/check`, {
-      headers: {
-        'Authorization': 'Bearer ' + getUserToken(),
-      },
-    });
-    const data = response.data;
-    logger.info("data: ", data);
-    return Object.assign(new UserOrderCheck(), data.data.check);
-  } catch (error) {
-    logger.error("error: ", error.response);
-    throw new Error(error.response.data);
-  }
-}
-
-export async function getCollectionPoints() {
-  const token = getItem("userToken");
-  let response;
-  try {
-    response = await axios.get(`${BASE_URL}/collection-points`, {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    });
-    const data = response.data;
-    logger.info("data: ", data);
-    return data.data.collection_points.data.map(d => Object.assign(new CollectionPoint(), d));
-  } catch (error) {
-    logger.error("error: ", error.message);
-    throw new Error(error.message);
   }
 }

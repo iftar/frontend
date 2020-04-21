@@ -89,6 +89,9 @@ export const updateUserOrderCheck = (userOrderCheck: UserOrderCheck) => ({
 });
 
 
+export const refreshLoginRequest = () => ({
+  type: types.REFRESH_LOGIN_REQUEST,
+});
 export const refreshLogin = (user: User, token: string) => ({
   type: types.REFRESH_LOGIN,
   payload: {

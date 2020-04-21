@@ -7,7 +7,6 @@ import {
   useLocation, Redirect,
 } from 'react-router-dom';
 
-import './App.css';
 import View from './components/element-wrappers/View';
 import Navigation from './components/Navigation';
 import {connect} from 'react-redux';
@@ -17,7 +16,6 @@ import {
   URL_SELECT_LOCATION,
   URL_SIGN_UP,
 } from './constants/urls';
-import OrdersView from './views/orders/OrdersView';
 import SelectCollectionPointViewContainer
   from './views/select-collection-point/SelectCollectionPointViewContainer';
 import CreateOrderViewContainer
@@ -84,7 +82,7 @@ function App(props : Props) {
 
   return (
       <Fragment>
-      <View style={{textAlign: "center", height: "100%", overflowY: "scroll", marginBottom: "100px"}}>
+      <View style={{textAlign: "center", height: "100%", marginBottom: "100px", overflowY: 'scroll'}}>
         <Navigation/>
         {renderElements()}
         {/*<FooterNav/>*/}

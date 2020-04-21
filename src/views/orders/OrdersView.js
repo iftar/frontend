@@ -2,11 +2,6 @@ import React, {Fragment, useEffect, useState} from 'react';
 import {Container} from 'react-bootstrap';
 import OrdersTodayView from './OrdersTodayView';
 import OrdersHistoryView from './OrdersHistoryView';
-import View from '../../components/element-wrappers/View';
-import CircleIconButton from '../../components/button/CircleIconButton';
-import Text from '../../components/element-wrappers/Text';
-import HeadingText from '../../components/element-wrappers/HeadingText';
-import {getOrders} from '../../util/api';
 import Loading from '../../components/Loading';
 import Error from '../../components/Error';
 import ErrorBoundary from '../../components/ErrorBoundary';
@@ -17,6 +12,8 @@ import each from 'lodash/each'
 import Header from '../../components/Header';
 import Order from '../../models/Order';
 import {fetchOrders} from '../../store/orders/actions';
+import PaddedScrollableYView
+  from '../../components/views/PaddedScrollableYView';
 
 type Props = {
   orders: Array<Order>,
@@ -73,19 +70,10 @@ function OrdersView(props : Props) {
   }
 
   return (
-      <ErrorBoundary>
-        <Container style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          height: '100%',
-          paddingBottom: '40px',
-          paddingTop: '40px',
-        }}>
-          <Header title={"My Orders"}/>
-          {renderElements()}
-        </Container>
-      </ErrorBoundary>
+      <PaddedScrollableYView>
+        <Header title={"My Orders"}/>
+        {renderElements()}
+      </PaddedScrollableYView>
   );
 }
 
