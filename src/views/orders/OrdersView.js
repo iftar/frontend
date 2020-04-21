@@ -12,6 +12,8 @@ import each from 'lodash/each'
 import Header from '../../components/Header';
 import Order from '../../models/Order';
 import {fetchOrders} from '../../store/orders/actions';
+import PaddedScrollableYView
+  from '../../components/views/PaddedScrollableYView';
 
 type Props = {
   orders: Array<Order>,
@@ -68,19 +70,10 @@ function OrdersView(props : Props) {
   }
 
   return (
-      <ErrorBoundary>
-        <Container style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          height: '100%',
-          paddingBottom: '40px',
-          paddingTop: '40px',
-        }}>
-          <Header title={"My Orders"}/>
-          {renderElements()}
-        </Container>
-      </ErrorBoundary>
+      <PaddedScrollableYView>
+        <Header title={"My Orders"}/>
+        {renderElements()}
+      </PaddedScrollableYView>
   );
 }
 

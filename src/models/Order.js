@@ -56,6 +56,10 @@ class Order {
     this.collection_point_time_slot = collection_point_time_slot;
     this.collection_point = collection_point;
   }
+
+  isDelivery() {
+    return this.address_line_1 != null;
+  }
 }
 
 export default Order;

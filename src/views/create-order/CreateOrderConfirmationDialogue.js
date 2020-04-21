@@ -8,7 +8,7 @@ import Row from 'react-bootstrap/Row';
 import {Button, Col, Table} from 'react-bootstrap';
 import Text from '../../components/element-wrappers/Text';
 import OrderCreation from '../../models/OrderCreation';
-import CollectionPointAddressUtil from '../../util/CollectionPointAddressUtil';
+import AddressUtil from '../../util/AddressUtil';
 import moment from 'moment-timezone';
 import ordersService from '../../services/ordersService';
 import {URL_ORDERS} from '../../constants/urls';
@@ -34,17 +34,13 @@ function CreateOrderConfirmationDialogue (props : Props) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [confirmedOrder: Order, setConfirmedOrder] = useState(null);
-  const [orderConfirmClicked, setOrderConfirmClicked] = useState(false);
 
   const history = useHistory();
 
   function onOrderConfirm() {
     setLoading(true);
     setError(null);
-    setOrderConfirmClicked(true);
     const orderServerRequest = createOrderRequest(orderCreation);
-    // setConfirmedOrder({});
-    // setLoading(false);
     ordersService.createOrder(props.token, orderServerRequest)
     .then((data) => setConfirmedOrder(data))
     .catch((error) => setError(error.message))
@@ -112,7 +108,7 @@ function CreateOrderConfirmationDialogue (props : Props) {
           <SubHeadingText color={"white"}>Pick Up Details</SubHeadingText>
           <LightText color={"white"}>Date: {date}</LightText>
           <LightText color={"white"}>Time: {time}</LightText>
-          <LightText color={"white"}>Location: {CollectionPointAddressUtil.getFullAddressFormatted(orderCreation.collection_point)}</LightText>
+          <LightText color={"white"}>Location: {AddressUtil.getFullAddressFormattedFromCollectionPoint(orderCreation.collection_point)}</LightText>
         </View>
     )
   }
@@ -124,7 +120,7 @@ function CreateOrderConfirmationDialogue (props : Props) {
           <SubHeadingText color={"white"}>Delivery Details</SubHeadingText>
           <LightText color={"white"}>Date: {date}</LightText>
           <LightText color={"white"}>Contact Number: {orderCreation.phone}</LightText>
-          <LightText color={"white"}>Delivery Address: {CollectionPointAddressUtil.getFullAddressFormattedFromOrder(orderCreation)}</LightText>
+          <LightText color={"white"}>Delivery Address: {AddressUtil.getFullAddressFormattedFromOrderCreation(orderCreation)}</LightText>
         </View>
     )
   }
@@ -219,7 +215,7 @@ function CreateOrderConfirmationDialogue (props : Props) {
 
   return (
       <Fragment>
-        <View style={{display: "flex", flexDirection: "column", justifyContent: "space-between", backgroundColor: "#1aadc0", width: "100%", minHeight: "75%", bottom: 0, position: "absolute", zIndex: "10", paddingTop: "40px", paddingBottom: "40px",  paddingLeft: "10%", paddingRight: "10%"}}>
+        <View style={{display: "flex", flexDirection: "column", justifyContent: "space-between", backgroundColor: "#1aadc0", width: "100%", minHeight: "100%", bottom: 0, position: "absolute", zIndex: "10", paddingTop: "40px", paddingBottom: "40px",  paddingLeft: "10%", paddingRight: "10%"}}>
           <HeadingText color={"white"}>Confirmation</HeadingText>
           {renderElements()}
         </View>

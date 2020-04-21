@@ -6,6 +6,7 @@ export const LOGOUT_REQUEST = "auth:LOGOUT_REQUEST";
 export const LOGOUT_SUCCESS = "auth:LOGOUT_SUCCESS";
 export const LOGOUT_FAILURE = "auth:LOGOUT_FAILURE";
 
+export const REFRESH_LOGIN_REQUEST = "auth:REFRESH_LOGIN_REQUEST";
 export const REFRESH_LOGIN = "auth:REFRESH_LOGIN";
 export const UPDATE_USER_ORDER_CHECK = "auth:UPDATE_USER_ORDER_CHECK";
 

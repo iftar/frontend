@@ -11,6 +11,8 @@ import ErrorBoundary from '../../components/ErrorBoundary';
 import UserOrderCheck from '../../models/UserOrderCheck';
 import Header from '../../components/Header';
 import {URL_CREATE_ORDER} from '../../constants/urls';
+import PaddedScrollableYView
+  from '../../components/views/PaddedScrollableYView';
 
 type Props = {
   collectionPoints: Array<CollectionPoint>,
@@ -76,22 +78,12 @@ function SelectCollectionPointView(props: Props) {
   }
 
   return (
-
-      <ErrorBoundary>
-        <Container style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          minHeight: '100%',
-          paddingBottom: '40px',
-          paddingTop: '40px',
-        }}>
-          <Header title={"Select Collection Point"}/>
+      <PaddedScrollableYView>
+          <Header title={"Select Collection Point"} subtitle={"Firstly, lets pick a centre where you'd like to collect food from"}/>
           <View style={{display: "flex", flexDirection: "column", width: "100%", justifyContent: "flex-start", alignItems: "center"}}>
             {renderElements()}
           </View>
-        </Container>
-      </ErrorBoundary>
+      </PaddedScrollableYView>
   );
 }
 

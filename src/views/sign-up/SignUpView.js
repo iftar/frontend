@@ -7,6 +7,8 @@ import './signup.css';
 
 // Images
 import logo from '../../assets/images/shareiftar-logo.png';
+import PaddedScrollableYView
+  from '../../components/views/PaddedScrollableYView';
 
 type Props = {
   login: (email: string, password: string) => void,
@@ -56,7 +58,7 @@ function SignUpView(props: Props) {
   }
 
   return (
-    <React.Fragment>
+    <PaddedScrollableYView>
 
       <div className="container">
         <img className="login_image" src={logo} alt="Alt" />
@@ -112,7 +114,7 @@ function SignUpView(props: Props) {
         </div>
       </div>
 
-    </React.Fragment>
+    </PaddedScrollableYView>
   )
 
 

@@ -11,6 +11,9 @@ import ThemedCard from '../../components/cards/ThemedCard';
 import {URL_SELECT_LOCATION} from '../../constants/urls';
 import Loading from '../../components/Loading';
 import Error from '../../components/Error';
+import View from '../../components/element-wrappers/View';
+import PaddedScrollableYView
+  from '../../components/views/PaddedScrollableYView';
 
 type Props = {
   loading: boolean,
@@ -68,7 +71,7 @@ function LoginView(props : Props) {
   }
 
   return (
-    <React.Fragment>
+    <PaddedScrollableYView>
       <Container>
         <img className="login_image" src={logo} alt="Alt" />
       </Container>
@@ -82,7 +85,7 @@ function LoginView(props : Props) {
           </div>
         </Row>
       </Container>
-    </React.Fragment>
+    </PaddedScrollableYView>
   )
 }
 
