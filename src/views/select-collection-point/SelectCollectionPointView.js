@@ -7,20 +7,10 @@ import Loading from '../../components/Loading';
 import Error from '../../components/Error';
 import SingleCollectionPointView from './SingleCollectionPointView';
 import CollectionPoint from '../../models/CollectionPoint';
-import {
-  fetchUserCanOrder,
-  getCollectionPoints,
-} from '../../util/api';
 import ErrorBoundary from '../../components/ErrorBoundary';
-import ThemedCard from '../../components/cards/ThemedCard';
-import LightText from '../../components/element-wrappers/LightText';
 import UserOrderCheck from '../../models/UserOrderCheck';
-import SubHeadingText from '../../components/element-wrappers/SubHeadingText';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faSadTear} from '@fortawesome/free-solid-svg-icons';
 import Header from '../../components/Header';
 import {URL_CREATE_ORDER} from '../../constants/urls';
-import {fetchCollectionPoints} from '../../store/collectionpoints/actions';
 
 type Props = {
   collectionPoints: Array<CollectionPoint>,

@@ -19,11 +19,11 @@ import Logger from '../../util/Logger';
 import moment from 'moment';
 import Loading from '../../components/Loading';
 import CreateOrderConfirmationDialogue from './CreateOrderConfirmationDialogue';
-import {createOrder, getUser} from '../../util/api';
-import OrderRequest from '../../models/OrderRequest';
+import OrderCreation from '../../models/OrderCreation';
 import Header from '../../components/Header';
 import User from '../../models/User';
 import ordersService from '../../services/ordersService';
+import Order from '../../models/Order';
 
 type Props = {
   user: User,
@@ -35,12 +35,10 @@ const CreateOrderView = (props : Props) => {
   const logger = new Logger(CreateOrderView.name);
   const IFTAR_ORDER_LIMIT = 10;
 
-  const collectionPoint = props.collectionPoint;
-
+  // For form validation
   const formRef = useRef();
 
-  const [iftarOrderQuantities, setIftarOrderQuantities] = useState([]);
-
+  //
   const [iftarOrders, setIftarOrders] = useState(1);
   const [selectedTimeSlotIndex, setSelectedTimeSlotIndex] = useState(0);
   const [isCollection, setIsCollection] = useState(true);
@@ -54,7 +52,7 @@ const CreateOrderView = (props : Props) => {
   const [postCode, setPostCode] = useState("");
   const [isFormValidated, setIsFormValidated] = useState("");
 
-  const [orderRequest, setOrderRequest] = useState(null);
+  const [orderCreation: OrderCreation, setOrderCreation] = useState(null);
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -63,34 +61,23 @@ const CreateOrderView = (props : Props) => {
   const history = useHistory();
 
   useEffect(() => {
-    const quantities = [];
-    for(let i=1; i<=IFTAR_ORDER_LIMIT; i++) {
-      quantities.push(i);
-    }
-    setIftarOrderQuantities(quantities)
-  }, [null]);
-
-  useEffect(() => {
-    if (collectionPoint === null) {
+    if (props.collectionPoint === null) {
       history.push(URL_SELECT_LOCATION);
     }
-  }, [collectionPoint]);
+  }, [props.collectionPoint]);
 
-
-  function onBackButtonClick() {
-    history.goBack();
-  }
 
   function onOrderSubmit() {
     // const form = event.currentTarget;
     setIsFormValidated(true);
-    // if (formRef.checkValidity() === true) {
+    if (formRef.current.checkValidity() === true) {
+      logger.info("formRef", formRef)
       logger.info("success validation")
-      const order = createOrderRequest();
-      setOrderRequest(order);
-    // } else {
-    //   logger.info("failed validation")
-    // }
+      const order = createOrderCreation();
+      setOrderCreation(order);
+    } else {
+      logger.info("failed validation")
+    }
     // event.preventDefault();
     // event.stopPropagation();
   }
@@ -98,14 +85,14 @@ const CreateOrderView = (props : Props) => {
   function onOrderConfirm() {
     setLoading(true);
     setError(null);
-    ordersService.createOrder(props.token, orderRequest)
+    ordersService.createOrder(props.token, orderCreation)
         .then((data) => history.push(URL_ORDERS))
         .catch((error) => setError(error.message))
         .finally(() => setLoading(false))
   }
 
   function onOrderCancel() {
-    setOrderRequest(null);
+    setOrderCreation(null);
   }
 
   function onCollectionSelected() {
@@ -116,48 +103,47 @@ const CreateOrderView = (props : Props) => {
     setIsCollection(false);
   }
 
-  function createOrderRequest() {
+  function createOrderCreation() {
     const user = props.user;
-    const orderRequest = new OrderRequest();
-    orderRequest.first_name = user.first_name;
-    orderRequest.last_name = user.last_name;
-    orderRequest.email = user.email;
-    orderRequest.quantity = iftarOrders;
-    orderRequest.collection_point = collectionPoint;
-    orderRequest.collection_point_time_slot = collectionPoint.collection_point_time_slots[selectedTimeSlotIndex];
-    orderRequest.collection_point_id = collectionPoint.id;
-    orderRequest.collection_point_time_slot_id = orderRequest.collection_point_time_slot.id;
+    const orderCreation = new OrderCreation();
+    orderCreation.first_name = user.first_name;
+    orderCreation.last_name = user.last_name;
+    orderCreation.email = user.email;
+    orderCreation.quantity = iftarOrders;
+    orderCreation.collection_point = props.collectionPoint;
+    orderCreation.collection_point_time_slot = props.collectionPoint.collection_point_time_slots[selectedTimeSlotIndex];
 
     // Delivery only
     if (!isCollection) {
-      orderRequest.phone = phone;
-      orderRequest.address_line_1 = addressLine1;
-      orderRequest.address_line_2 = addressLine2;
-      orderRequest.city = city;
-      orderRequest.county = county;
-      orderRequest.post_code = postCode;
+      orderCreation.phone = phone;
+      orderCreation.address_line_1 = addressLine1;
+      orderCreation.address_line_2 = addressLine2;
+      orderCreation.city = city;
+      orderCreation.county = county;
+      orderCreation.post_code = postCode;
     }
-    return orderRequest;
+    return orderCreation;
   }
 
-  function CollectionCenterDetailsPanel() {
+  function renderCollectionCenterDetailsPanel() {
     return (
         <Fragment>
           <ThemedCard>
             <View style={{display: "flex", flexDirection: "column", width: "100%"}}>
-              <LightText>{collectionPoint.name}</LightText>
-              <IconWithTextPanel icon={faMapPin} text={CollectionPointAddressUtil.getFullAddressFormatted(collectionPoint)}/>
-              <IconWithTextPanel icon={faShoppingBag} text={collectionPoint.max_daily_capacity + ' meals left'}/>
+              <LightText>{props.collectionPoint.name}</LightText>
+              <IconWithTextPanel icon={faMapPin} text={CollectionPointAddressUtil.getFullAddressFormatted(props.collectionPoint)}/>
+              <IconWithTextPanel icon={faShoppingBag} text={props.collectionPoint.max_daily_capacity + ' meals left'}/>
             </View>
           </ThemedCard>
         </Fragment>
     )
   }
 
-  function IftarPacksOptionPanel() {
-    const options  = iftarOrderQuantities.map(amount => (
-        <option key={amount} value={amount}>{amount}</option>
-    ));
+  function renderIftarPacksOptionPanel() {
+    const options = [];
+    for(let i=1; i<=IFTAR_ORDER_LIMIT; i++) {
+      options.push(<option key={i} value={i}>{i}</option>);
+    }
     return (
         <Fragment>
           <ThemedCard>
@@ -177,7 +163,7 @@ const CreateOrderView = (props : Props) => {
     )
   }
 
-  function DeliveryOptionsPanel() {
+  function renderDeliveryOptionsPanel() {
 
     return (
         <Fragment>
@@ -236,7 +222,7 @@ const CreateOrderView = (props : Props) => {
                 <Form.Control
                     as={"input"}
                     value={county}
-                    onChange={(event) => setCity(event.target.value)}
+                    onChange={(event) => setCounty(event.target.value)}
                 />
               </Form.Group>
               <Form.Group>
@@ -245,11 +231,7 @@ const CreateOrderView = (props : Props) => {
                     as={"input"}
                     value={postCode}
                     required
-                    onChange={(event) => {
-                      setPostCode(event.target.value);
-                      event.preventDefault();
-                      event.stopPropagation();
-                    }}
+                    onChange={(event) => setPostCode(event.target.value)}
                 />
                 <Form.Control.Feedback type="invalid">
                   Postcode is required
@@ -274,8 +256,8 @@ const CreateOrderView = (props : Props) => {
     )
   }
 
-  function SelectTimePanel() {
-    const collectionPointTimes = collectionPoint.collection_point_time_slots;
+  function renderSelectTimePanel() {
+    const collectionPointTimes = props.collectionPoint.collection_point_time_slots;
     if (collectionPointTimes === null) {
       return <Error>Could not load collection times.</Error>;
     }
@@ -311,18 +293,18 @@ const CreateOrderView = (props : Props) => {
           <Fragment>
             <Form ref={formRef} validated={isFormValidated}>
 
-              <CollectionCenterDetailsPanel collectionPoint={collectionPoint}/>
+              {renderCollectionCenterDetailsPanel()}
 
-              <IftarPacksOptionPanel/>
+              {renderIftarPacksOptionPanel()}
 
-              <DeliveryOptionsPanel/>
+              {renderDeliveryOptionsPanel()}
 
-              <SelectTimePanel/>
+              {renderSelectTimePanel()}
 
               <Button type={"button"} variant="primary" size={"lg"} block onClick={onOrderSubmit}>Submit Order</Button>
             </Form>
 
-            {orderRequest != null && <CreateOrderConfirmationDialogue onClose={onOrderCancel} onConfirm={onOrderConfirm} orderRequest={orderRequest}/>}
+            {orderCreation != null && <CreateOrderConfirmationDialogue onClose={onOrderCancel} token={props.token} orderCreation={orderCreation}/>}
           </Fragment>
       );
     }
