@@ -10,11 +10,13 @@ function PaddedScrollableYView(props) {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              minHeight: '100%',
               paddingBottom: '120px',
               paddingTop: '40px',
               paddingLeft: "15px",
               paddingRight: "15px",
+              height: "100%",
+              marginBottom: "100px",
+              overflowY: "scroll"
             }}
             {...props}
         >

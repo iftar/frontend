@@ -90,7 +90,7 @@ function App(props: Props) {
           textAlign: "center",
           height: "100%",
           marginBottom: "100px",
-          overflowY: "scroll"
+          overflowY: "hidden"
         }}
       >
         <Navigation />
