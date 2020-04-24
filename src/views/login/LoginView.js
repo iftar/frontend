@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { login } from '../../util/api'
+import { login, forgotPassword } from '../../util/api'
 import './login.css';
 import { Link } from "react-router-dom";
-import {useHistory} from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 // Images
 import logo from './../../assets/images/shareiftar-logo.png';
-import {Col, Container, Row} from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import ThemedCard from '../../components/cards/ThemedCard';
-import {URL_SELECT_LOCATION} from '../../constants/urls';
+import { URL_SELECT_LOCATION } from '../../constants/urls';
 import Loading from '../../components/Loading';
 import Error from '../../components/Error';
 import View from '../../components/element-wrappers/View';
@@ -21,9 +21,11 @@ type Props = {
   login: (email: string, password: string) => void,
 }
 
-function LoginView(props : Props) {
+function LoginView(props: Props) {
   const [email, setEmail] = useState('dilwoar.hussain+dummy@gmail.com');
   const [password, setPassword] = useState('password');
+  const [hasUserForgotPassword, setHasUserForgotPassword] = useState(false);
+  const [forgotPasswordSubmitted, setForgotPasswordSubmitted] = useState(false);
 
   const history = useHistory();
 
@@ -37,17 +39,39 @@ function LoginView(props : Props) {
   const submitHandler = e => {
     e.preventDefault();
     console.log("email and password", email, password);
-
     props.login(email, password);
   };
 
+
+  // Forgot Password
+  const forgotPasswordHandler = (e) => {
+    setHasUserForgotPassword(true);
+  }
+  const forgotPasswordEmailInputHandler = (e) => {
+    setEmail(e.target.value);
+  }
+
+  // const resetPasswordButtonHandler = (e) => {
+  //   setForgotPasswordSubmitted(true);
+  // }
+
+  const forgotPasswordSubmit = e => {
+    e.preventDefault();
+    forgotPassword(email)
+      .then(result => {
+        if(result.status === "success") {
+          setForgotPasswordSubmitted(true);
+        }
+      })
+  }
+
   function renderElements() {
     if (props.loading) {
-      return <Loading/>
+      return <Loading />
     } else {
       return (
-          <Container>
-            {props.error && <Error>{props.error}</Error>}
+        <Container>
+          {props.error && <Error>{props.error}</Error>}
           <form className="form-signin" onSubmit={submitHandler}>
             <div className="form-label-group">
               <input type="email" name="email" className="form-control" placeholder="Enter your Email address" value={email} onChange={emailInputHandler} required autoFocus />
@@ -55,14 +79,28 @@ function LoginView(props : Props) {
             <div className="form-label-group">
               <input type="password" name="password" className="form-control" placeholder="Enter your Password" value={password} onChange={passwordInputHandler} required />
             </div>
-            <p className="forgot_password"> Forgot Password? </p>
             <hr className="my-4" />
             <button className="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button>
             <div className="account">
               <p>Not a member yet? <span className="signup_button"><Link to={"/sign-up"}> Sign up  </Link> </span></p>
             </div>
           </form>
-          </Container>
+          <hr className="my-4" />
+          <button className="forgot_password btn btn-primary" onClick={forgotPasswordHandler}> Forgot Password </button>
+          {hasUserForgotPassword === true ? (
+            <form className="account" onSubmit={forgotPasswordSubmit}>
+              <div className="form-label-group">
+                <input type="email" name="email" className="form-control" placeholder="Enter your Email address" value={email} onChange={forgotPasswordEmailInputHandler} required autoFocus />
+              </div>
+              <button className="btn btn-lg btn-primary" type="submit" onClick={forgotPasswordSubmit}>Send Password Reset Email</button>
+              {forgotPasswordSubmitted === true ? (
+                <div className="account"> 
+                  <p> Password reset link has been sent if an account exists with the given email. </p>
+                </div>
+              ) : <p className="no_error_message"> test</p>}
+            </form>
+          ) : <p className="no_error_message"> </p>}
+        </Container>
 
       )
     }
@@ -73,7 +111,7 @@ function LoginView(props : Props) {
       <Container>
         <img className="login_image" src={logo} alt="Alt" />
       </Container>
-      <Container style={{marginBottom: "50px"}}>
+      <Container style={{ marginBottom: "50px" }}>
         <Row>
           <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
             <ThemedCard>

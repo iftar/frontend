@@ -69,3 +69,20 @@ export async function register(firstname, lastname, email, password, confirm) {
     return error.response.data;
   }
 }
+
+export async function forgotPassword(email) {
+  let response;
+  try { 
+    response = await axios.post(`${BASE_URL}/forgot-password`, {
+      email,
+    });
+    const data = response.data;
+    if (response.status === 200) {
+      const message = data.data;
+    }
+    return data;
+  } catch (error) {
+    console.log('error: ', error.response);
+    return error.response.data;
+  }
+}
