@@ -27,19 +27,21 @@ function Header(props : Props) {
         justifyContent: 'flex-start',
         alignItems: 'center',
         marginBottom: "15px",
+        minHeight: "150px"
       }}>
-      <View style={{
-        display: 'flex',
-        width: '100%',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        marginBottom: "10px",
-      }}>
-        <CircleIconButton onClick={onBackButtonClick}/>
-        <HeadingText style={{fontWeight: 'bold', fontSize: '2em'}}>{props.title}</HeadingText>
-      </View>
+        <View style={{
+          display: 'flex',
+          width: '100%',
+          justifyContent: 'flex-start',
+          alignItems: 'center',
+          marginBottom: "10px",
+          minHeight: "60px"
+        }}>
+          <CircleIconButton onClick={onBackButtonClick}/>
+          <HeadingText style={{fontWeight: 'bold', fontSize: '2em'}}>{props.title}</HeadingText>
+        </View>
 
-        {props.subtitle && <LightText style={{fontStyle: "italic"}}>{props.subtitle}</LightText>}
+        {props.subtitle && <LightText style={{fontStyle: "italic" , paddingTop: "10px"}}>{props.subtitle}</LightText>}
       </View>
   )
 }
