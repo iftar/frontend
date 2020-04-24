@@ -47,16 +47,15 @@ export async function login(email, password) {
   }
 }
 
-export async function register(firstname, lastname, email, password, confirm) {
+export async function register(firstname, lastname, email, password) {
   let response;
 
   try {
     response = await axios.post(`${BASE_URL}/register`, {
-      firstname,
-      lastname,
-      email,
-      password,
-      confirm,
+      first_name: firstname,
+      last_name: lastname,
+      email: email,
+      password: password,
     });
 
     const data = response.data;
