@@ -47,7 +47,7 @@ export async function login(email, password) {
   }
 }
 
-export async function register(firstname, lastname, email, password) {
+export async function register(firstname, lastname, email, password, confirm) {
   let response;
 
   try {
@@ -56,6 +56,7 @@ export async function register(firstname, lastname, email, password) {
       last_name: lastname,
       email: email,
       password: password,
+      confirm: confirm,
     });
 
     const data = response.data;
