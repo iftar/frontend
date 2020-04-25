@@ -51,7 +51,16 @@ function CreateOrderConfirmationDialogue (props : Props) {
     if (loading) {
       return <Loading/>;
     } else if (error) {
-      return <Error>{error}</Error>;
+      return (
+          <View>
+          <Error>{error}</Error>
+            <View style={{display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%"}}>
+              <View style={{width: "100%", marginRight: "10px"}}>
+                <Button variant={"outline-light"} size={"lg"} block onClick={props.onClose}>Cancel</Button>
+              </View>
+            </View>
+          </View>
+      );
     } else if (orderCreation == null) {
       return <NoItemsFound/>
     } else if (confirmedOrder) {
