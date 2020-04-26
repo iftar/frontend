@@ -21,8 +21,8 @@ type Props = {
 };
 
 function LoginView(props: Props) {
-  const [email, setEmail] = useState("dilwoar.hussain+dummy@gmail.com");
-  const [password, setPassword] = useState("password");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const history = useHistory();
 

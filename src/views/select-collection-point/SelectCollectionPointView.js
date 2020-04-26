@@ -1,6 +1,6 @@
 import React, {Fragment, useEffect, useState} from 'react';
 
-import {Card, Container, Row} from 'react-bootstrap';
+import {Button, Card, Container, Form, InputGroup, Row} from 'react-bootstrap';
 import View from '../../components/element-wrappers/View';
 import {useHistory} from 'react-router-dom';
 import Loading from '../../components/Loading';
@@ -13,34 +13,57 @@ import Header from '../../components/Header';
 import {URL_CREATE_ORDER} from '../../constants/urls';
 import PaddedScrollableYView
   from '../../components/views/PaddedScrollableYView';
+import {fetchCurrentLocation} from '../../store/location/actions';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faLocationArrow, faSpinner} from '@fortawesome/free-solid-svg-icons';
+import {fetchCollectionPointsNearMe} from '../../store/collectionpoints/actions';
+import isEmpty from 'lodash-es/isEmpty';
+import NoItemsFound from '../../components/NoItemsFound';
 
 type Props = {
   collectionPoints: Array<CollectionPoint>,
   error: string,
   loading: boolean,
   userOrderCheck: UserOrderCheck,
+  locationCoordinates: {latitude: number, longitude:number},
+  locationError: string,
+  locationLoading: boolean,
 
   fetchUserOrderCheck: () => void,
   fetchCollectionPoints: () => void,
   selectCollectionLocation: (collectionPoint: CollectionPoint) => void,
+  fetchCurrentLocation: () => void,
+  fetchCollectionPointsNearMe: () => void,
 }
 
 function SelectCollectionPointView(props: Props) {
 
-  const [collectionPoints, setCollectionPoints] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [canOrder : UserOrderCheck, setCanOrder] = useState(null);
+  const [useCurrentLocation, setUseCurrentLocation] = useState(true);
 
   const history = useHistory();
 
   useEffect(() => {
-    props.fetchUserOrderCheck()
+    props.fetchUserOrderCheck();
+    fetchCurrentLocation();
   }, [null]);
 
   useEffect(() => {
-    props.fetchCollectionPoints();
-  }, [canOrder]);
+    // if (props.locationError || isEmpty(props.locationCoordinates)) {
+    //   props.fetchCollectionPoints();
+    // } else {
+    //   props.fetchCollectionPointsNearMe();
+    // }
+  }, [props.userOrderCheck]);
+
+  useEffect(() => {
+    if (true || props.userOrderCheck.user_can_order) {
+      if(useCurrentLocation) {
+        props.fetchCollectionPointsNearMe();
+      } else {
+        props.fetchCollectionPoints();
+      }
+    }
+  }, [props.locationCoordinates, props.userOrderCheck, useCurrentLocation]);
 
   function onCollectionPointsSelected(collectionPoint: CollectionPoint) {
     props.selectCollectionLocation(collectionPoint);
@@ -48,7 +71,7 @@ function SelectCollectionPointView(props: Props) {
   }
 
   function renderElements() {
-    if (props.loading) {
+    if (props.loading || props.locationLoading) {
       return <Loading/>;
     } else if (props.error) {
       return <Error>{props.error}</Error>;
@@ -65,6 +88,9 @@ function SelectCollectionPointView(props: Props) {
     //       </View>
     //   )
     // }
+    else if (isEmpty(props.collectionPoints)) {
+      return <NoItemsFound message={"No collection points found"}/>
+    }
     else {
       return (
           props.collectionPoints.map(collectionPoint =>
@@ -79,10 +105,16 @@ function SelectCollectionPointView(props: Props) {
 
   return (
       <PaddedScrollableYView>
-          <Header title={"Select Collection Point"} subtitle={"Firstly, lets pick a centre where you'd like to collect food from"}/>
-          <View style={{display: "flex", flexDirection: "column", width: "100%", justifyContent: "flex-start", alignItems: "center"}}>
-            {renderElements()}
-          </View>
+        <Header title={"Select Collection Point"} subtitle={"Firstly, lets pick a centre where you'd like to collect food from"}/>
+        <View style={{display: "flex", flexDirection: "row", width: "100%", justifyContent: "flex-start", alignItems: "center", marginBottom: "40px", marginTop: "20px"}}>
+          <Button variant={useCurrentLocation ?"primary-outline" :  "primary"} size={"lg"} block onClick={() => setUseCurrentLocation(!useCurrentLocation)}>
+            {props.locationLoading ? <FontAwesomeIcon icon={faSpinner} spin/> : <FontAwesomeIcon icon={faLocationArrow}/>} &nbsp;
+            { useCurrentLocation ? "Disable Current Location" : "Enable Current Location"}
+          </Button>
+        </View>
+        <View style={{display: "flex", flexDirection: "column", width: "100%", justifyContent: "flex-start", alignItems: "center"}}>
+          {renderElements()}
+        </View>
       </PaddedScrollableYView>
   );
 }

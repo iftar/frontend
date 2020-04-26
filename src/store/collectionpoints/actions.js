@@ -15,6 +15,20 @@ export const fetchCollectionPoints = () => {
   }
 };
 
+export const fetchCollectionPointsNearMe = () => {
+  return async (dispatch, getState) => {
+    dispatch(fetchCollectionPointsRequest());
+    const token = getState().auth.token;
+    const {latitude, longitude} = getState().location.coordinates;
+    try {
+      const collectionPoints = await collectionPointService.fetchCollectionPointsNearMe(token, latitude, longitude);
+      dispatch(fetchCollectionPointsSuccess(collectionPoints));
+    } catch (e) {
+      dispatch(fetchCollectionPointsFailure(e.message));
+    }
+  }
+};
+
 export const fetchCollectionPointsRequest = () => ({
   type: types.FETCH_COLLECTION_POINTS_REQUEST
 });
