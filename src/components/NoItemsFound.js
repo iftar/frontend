@@ -15,7 +15,7 @@ function NoItemsFound(props) {
           <ThemedCard style={{ width: '100%' }}>
               <View style={{display: "flex", flex: 1, flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
                 <FontAwesomeIcon icon={faFrownOpen} color={COLOR_PRIMARY}></FontAwesomeIcon>
-                <LightText>{"No items found"}</LightText>
+                <LightText>{props.message || "No items found"}</LightText>
               </View>
           </ThemedCard>
         </View>
