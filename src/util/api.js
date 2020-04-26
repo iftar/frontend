@@ -52,11 +52,11 @@ export async function register(firstname, lastname, email, password, confirm) {
 
   try {
     response = await axios.post(`${BASE_URL}/register`, {
-      firstname,
-      lastname,
-      email,
-      password,
-      confirm,
+      first_name: firstname,
+      last_name: lastname,
+      email: email,
+      password: password,
+      confirm: confirm,
     });
 
     const data = response.data;
