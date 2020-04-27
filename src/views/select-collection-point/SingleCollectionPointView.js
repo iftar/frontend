@@ -1,6 +1,6 @@
 import React, {Fragment, useState} from 'react';
 
-import iftarImg from "../../assets/images/iftar.png";
+import iftarImg from "../../assets/images/shareiftar-icon-13.png";
 import {Button, Card, Container, Row} from 'react-bootstrap';
 import View from '../../components/element-wrappers/View';
 import ThemedCard from '../../components/cards/ThemedCard';
