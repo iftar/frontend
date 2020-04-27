@@ -9,7 +9,7 @@ import {BrowserRouter as Router} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import store from './store/configureStore'
 
-if (process.env.SENTRY_DSN) Sentry.init({dsn: process.env.SENTRY_DSN});
+if (process.env.REACT_APP_SENTRY_DSN) Sentry.init({dsn: process.env.REACT_APP_SENTRY_DSN});
 
 ReactDOM.render(
     <React.StrictMode>
