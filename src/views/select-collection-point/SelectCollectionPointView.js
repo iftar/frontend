@@ -15,10 +15,17 @@ import PaddedScrollableYView
   from '../../components/views/PaddedScrollableYView';
 import {fetchCurrentLocation} from '../../store/location/actions';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faLocationArrow, faSpinner} from '@fortawesome/free-solid-svg-icons';
+import {
+  faLocationArrow,
+  faSadTear,
+  faSpinner,
+} from '@fortawesome/free-solid-svg-icons';
 import {fetchCollectionPointsNearMe} from '../../store/collectionpoints/actions';
 import isEmpty from 'lodash-es/isEmpty';
 import NoItemsFound from '../../components/NoItemsFound';
+import ThemedCard from '../../components/cards/ThemedCard';
+import SubHeadingText from '../../components/element-wrappers/SubHeadingText';
+import LightText from '../../components/element-wrappers/LightText';
 
 type Props = {
   collectionPoints: Array<CollectionPoint>,
@@ -76,18 +83,18 @@ function SelectCollectionPointView(props: Props) {
     } else if (props.error) {
       return <Error>{props.error}</Error>;
     }
-    // else if (props.userOrderCheck != null && !props.userOrderCheck.user_can_order) {
-    //   return (
-    //       <View>
-    //         <ThemedCard>
-    //           <SubHeadingText><FontAwesomeIcon icon={faSadTear}/></SubHeadingText>
-    //           <SubHeadingText>Sorry, but you cannot order right now.</SubHeadingText>
-    //           <br/>
-    //           {props.userOrderCheck.messages.map(m => <LightText key={m}>{m}</LightText>)}
-    //         </ThemedCard>
-    //       </View>
-    //   )
-    // }
+    else if (props.userOrderCheck != null && !props.userOrderCheck.user_can_order) {
+      return (
+          <View>
+            <ThemedCard>
+              <SubHeadingText><FontAwesomeIcon icon={faSadTear}/></SubHeadingText>
+              <SubHeadingText>Sorry, but you cannot order right now.</SubHeadingText>
+              <br/>
+              {props.userOrderCheck.messages.map(m => <LightText key={m}>{m}</LightText>)}
+            </ThemedCard>
+          </View>
+      )
+    }
     else if (isEmpty(props.collectionPoints)) {
       return <NoItemsFound message={"No collection points found"}/>
     }

@@ -20,7 +20,9 @@ function SingleCollectionPointView(props: Props) {
   const collectionPoint = props.collectionPoint;
 
   function onClick() {
-    props.onClick(collectionPoint);
+    if (collectionPoint.accepting_orders) {
+      props.onClick(collectionPoint);
+    }
   }
 
   return (
@@ -30,12 +32,11 @@ function SingleCollectionPointView(props: Props) {
             <View style={{display: "flex", flex: 1, flexDirection: "column", justifyContent: "space-around", alignItems: "flex-start"}}>
               <Text style={{fontWeight: "bold", fontSize: "1.2em", paddingBottom: "15px"}}>{collectionPoint.name}</Text>
               {/*<IconWithTextPanel icon={faMapPin} text={collectionPoint} />*/}
-              <IconWithTextPanel icon={faBox} text={collectionPoint.max_daily_capacity + ' meals left'} />
+              <IconWithTextPanel icon={faBox} text={collectionPoint.available_capacity + ' meals left'} />
               <IconWithTextPanel icon={faMapPin} text={AddressUtil.getFullAddressFormattedFromCollectionPoint(collectionPoint)} />
-              <Button variant={"primary"} block onClick={onClick}>Select</Button>
+              <Button variant={"primary"} block onClick={onClick} disabled={!collectionPoint.accepting_orders}>Select</Button>
             </View>
           </View>
-
         </ThemedCard>
   );
 }
