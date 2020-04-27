@@ -237,22 +237,26 @@ const CreateOrderView = (props: Props) => {
               width: "100%"
             }}
           >
+            {props.collectionPoint.accepting_collections &&
             <Form.Check
-              name="collection-or-delivery"
-              type={"radio"}
-              label={"Collection"}
-              id={"radio-collection"}
-              onChange={onCollectionSelected}
-              checked={isCollection}
+                name="collection-or-delivery"
+                type={"radio"}
+                label={"Collection"}
+                id={"radio-collection"}
+                onChange={onCollectionSelected}
+                checked={isCollection}
             />
+            }
+            {props.collectionPoint.accepting_deliveries &&
             <Form.Check
-              name="collection-or-delivery"
-              type={"radio"}
-              label={"Delivery"}
-              id={"radio-delivery"}
-              onChange={onDeliverySelected}
-              checked={!isCollection}
+                name="collection-or-delivery"
+                type={"radio"}
+                label={"Delivery"}
+                id={"radio-delivery"}
+                onChange={onDeliverySelected}
+                checked={!isCollection}
             />
+            }
           </View>
           {!isCollection && (
             <View
