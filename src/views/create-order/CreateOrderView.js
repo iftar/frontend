@@ -164,7 +164,7 @@ const CreateOrderView = (props: Props) => {
             />
             <IconWithTextPanel
               icon={faShoppingBag}
-              text={props.collectionPoint.max_daily_capacity + " meals left"}
+              text={props.collectionPoint.available_capacity + " meals left"}
             />
           </View>
         </ThemedCard>
