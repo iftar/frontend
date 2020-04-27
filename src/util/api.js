@@ -3,7 +3,7 @@ import { getItem, saveItem } from './storage';
 import User from '../models/User';
 import Logger from './Logger';
 
-const BASE_URL = 'https://share-iftar-staging.herokuapp.com/api';
+const BASE_URL = process.env.API_BASE_URL ? process.env.API_BASE_URL + "/api" : "https://share-iftar-staging.herokuapp.com/api";
 
 const USER_TOKEN_KEY = 'userToken';
 const USER_KEY = 'user';
