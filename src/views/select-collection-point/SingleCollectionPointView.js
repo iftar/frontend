@@ -34,10 +34,9 @@ function SingleCollectionPointView(props: Props) {
               {/*<IconWithTextPanel icon={faMapPin} text={collectionPoint} />*/}
               <IconWithTextPanel icon={faBox} text={collectionPoint.available_capacity + ' meals left'} />
               <IconWithTextPanel icon={faMapPin} text={AddressUtil.getFullAddressFormattedFromCollectionPoint(collectionPoint)} />
-              <Button variant={"primary"} block onClick={onClick} disabled={collectionPoint.accepting_orders}>Select</Button>
+              <Button variant={"primary"} block onClick={onClick} disabled={!collectionPoint.accepting_orders}>Select</Button>
             </View>
           </View>
-
         </ThemedCard>
   );
 }
