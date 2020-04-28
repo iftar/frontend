@@ -44,7 +44,7 @@ function SingleCollectionPointView(props: Props) {
 function SingleCollectionImage() {
   return (
       <View style={{marginRight: "20px", maxWidth: "40%"}}>
-        <img src={iftarImg} alt="Iftar" width={"100%"} height={"100%"} style={{objectFit: "contain"}}/>
+        <img src={iftarImg} alt="collection point logo" style={{objectFit: "contain", maxHeight: "250px", maxWidth: "100%"}}/>
       </View>
   )
 }
