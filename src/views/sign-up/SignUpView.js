@@ -44,6 +44,7 @@ function SignUpView(props: Props) {
   const [errorMessage, setErrorMessage] = useState('');
 
   const submitHandler = e => {
+    setErrorMessage('');
     e.preventDefault();
     register(firstname, lastname, email, password, confirm)
       .then(result => {
