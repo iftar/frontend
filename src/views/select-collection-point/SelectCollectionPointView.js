@@ -96,7 +96,7 @@ function SelectCollectionPointView(props: Props) {
       )
     }
     else if (isEmpty(props.collectionPoints)) {
-      return <NoItemsFound message={"No collection points found"}/>
+      return <NoItemsFound message={"No collection points found in your local area, please disable location to see all."}/>
     }
     else {
       return (
