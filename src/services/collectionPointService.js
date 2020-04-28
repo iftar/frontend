@@ -58,6 +58,45 @@ class CollectionPointService {
     }
   };
 
+
+  fetchCollectionPointsNearMeUsingPostcode = async function(token: string, postcode: string) : Array<CollectionPoint> {
+    try {
+      const response = await axios.post(`${BASE_URL}/api/collection-points/near-me`, {
+        postcode: postcode
+      }, {
+        headers: {
+          Authorization: "Bearer " + token,
+        }
+      });
+      const data = response.data;
+      this.logger.info("data: ", data);
+      if (data.status === "success") {
+        const collectionPoints = data.data.collection_points;
+        if (!isEmpty(collectionPoints)) {
+          return collectionPoints.map(d => Object.assign(new CollectionPoint(), d));
+        } else {
+          return [];
+        }
+      } else {
+        throw new Error(data.message);
+      }
+
+    } catch (error) {
+      let errorMessage;
+      this.logger.error("error: ", error);
+      this.logger.error("error.response: ", error.response);
+      this.logger.error("error.message: ", error.message);
+      if (error.response) {
+        errorMessage = error.response.data.message
+      } else {
+        errorMessage = error.message
+      }
+
+
+      throw new Error("Failed to fetch collection points: " + errorMessage);
+    }
+  };
+
 }
 
 export default new CollectionPointService();
