@@ -26,6 +26,8 @@ import NoItemsFound from '../../components/NoItemsFound';
 import ThemedCard from '../../components/cards/ThemedCard';
 import SubHeadingText from '../../components/element-wrappers/SubHeadingText';
 import LightText from '../../components/element-wrappers/LightText';
+import {useDebounce} from 'react-use';
+import debounce from 'lodash-es/debounce';
 
 type Props = {
   collectionPoints: Array<CollectionPoint>,
@@ -46,6 +48,8 @@ type Props = {
 function SelectCollectionPointView(props: Props) {
 
   const [useCurrentLocation, setUseCurrentLocation] = useState(true);
+  const [postcode, setPostcode] = useState(null);
+  const [showAll, setShowAll] = useState(false);
 
   const history = useHistory();
 
@@ -63,19 +67,24 @@ function SelectCollectionPointView(props: Props) {
   }, [props.userOrderCheck]);
 
   useEffect(() => {
-    if (true || props.userOrderCheck.user_can_order) {
-      if(useCurrentLocation) {
-        props.fetchCollectionPointsNearMe();
-      } else {
+    if (props.userOrderCheck != null && props.userOrderCheck.user_can_order) {
+      if(!isEmpty(postcode)) {
+        props.fetchCollectionPointsNearMe(postcode);
+      } else if (showAll) {
         props.fetchCollectionPoints();
       }
     }
-  }, [props.locationCoordinates, props.userOrderCheck, useCurrentLocation]);
+  }, [props.locationCoordinates, props.userOrderCheck, showAll, postcode]);
 
   function onCollectionPointsSelected(collectionPoint: CollectionPoint) {
     props.selectCollectionLocation(collectionPoint);
     history.push(URL_CREATE_ORDER);
   }
+
+  const onPostcodeChange = debounce( (value) => {
+    setPostcode(value);
+    setShowAll(false);
+  }, 400);
 
   function renderElements() {
     if (props.loading || props.locationLoading) {
@@ -91,6 +100,19 @@ function SelectCollectionPointView(props: Props) {
               <SubHeadingText>Sorry, but you cannot order right now.</SubHeadingText>
               <br/>
               {props.userOrderCheck.messages.map(m => <LightText key={m}>{m}</LightText>)}
+            </ThemedCard>
+          </View>
+      )
+    }
+    else if (isEmpty(postcode) && !showAll) {
+      return (
+          <View>
+            <ThemedCard>
+              <LightText>Enter a postcode</LightText>
+              <br/>
+              <LightText>Or alternatively, click below to show all collection points.</LightText>
+              <br/>
+              <Button size={"sm"} variant={"outline-secondary"} block onClick={() => setShowAll(true)}>Show All</Button>
             </ThemedCard>
           </View>
       )
@@ -114,10 +136,11 @@ function SelectCollectionPointView(props: Props) {
       <PaddedScrollableYView>
         <Header title={"Select Collection Point"} subtitle={"Firstly, lets pick a centre where you'd like to collect food from"}/>
         <View style={{display: "flex", flexDirection: "row", width: "100%", justifyContent: "flex-start", alignItems: "center", marginBottom: "40px", marginTop: "20px"}}>
-          <Button variant={useCurrentLocation ?"primary-outline" :  "primary"} size={"lg"} block onClick={() => setUseCurrentLocation(!useCurrentLocation)}>
-            {props.locationLoading ? <FontAwesomeIcon icon={faSpinner} spin/> : <FontAwesomeIcon icon={faLocationArrow}/>} &nbsp;
-            { useCurrentLocation ? "Disable Current Location" : "Enable Current Location"}
-          </Button>
+          {/*<Button variant={useCurrentLocation ?"primary-outline" :  "primary"} size={"lg"} block onClick={() => setUseCurrentLocation(!useCurrentLocation)}>*/}
+          {/*  {props.locationLoading ? <FontAwesomeIcon icon={faSpinner} spin/> : <FontAwesomeIcon icon={faLocationArrow}/>} &nbsp;*/}
+          {/*  { useCurrentLocation ? "Disable Current Location" : "Enable Current Location"}*/}
+          {/*</Button>*/}
+          <Form.Control type="input" placeholder="Enter your postcode..." size={"lg"} onChange={(event) => onPostcodeChange(event.target.value)} />
         </View>
         <View style={{display: "flex", flexDirection: "column", width: "100%", justifyContent: "flex-start", alignItems: "center"}}>
           {renderElements()}
