@@ -59,7 +59,7 @@ function App(props: Props) {
             <OrdersViewContainer />
           </Route>
           <Route path="/">
-            <Redirect to={URL_SELECT_LOCATION} />
+            <Redirect to={URL_ORDERS} />
           </Route>
         </Switch>
       );
