@@ -15,13 +15,13 @@ export const fetchCollectionPoints = () => {
   }
 };
 
-export const fetchCollectionPointsNearMe = () => {
+export const fetchCollectionPointsNearMe = (postcode: string) => {
   return async (dispatch, getState) => {
     dispatch(fetchCollectionPointsRequest());
     const token = getState().auth.token;
     const {latitude, longitude} = getState().location.coordinates;
     try {
-      const collectionPoints = await collectionPointService.fetchCollectionPointsNearMe(token, latitude, longitude);
+      const collectionPoints = await collectionPointService.fetchCollectionPointsNearMeUsingPostcode(token, postcode);
       dispatch(fetchCollectionPointsSuccess(collectionPoints));
     } catch (e) {
       dispatch(fetchCollectionPointsFailure(e.message));
