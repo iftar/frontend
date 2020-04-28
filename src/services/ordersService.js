@@ -47,7 +47,7 @@ class OrdersService {
       return Object.assign(new Order(), appData.order);
     } catch (error) {
       this.logger.error(error.message);
-      throw new Error('Failed to create order: ' + error.message);
+      throw new Error('Failed to create order: ' + error.response.data.message);
     }
   }
 
