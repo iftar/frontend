@@ -33,8 +33,9 @@ class AuthService {
         token: token
       };
     } catch (err) {
-      this.logger.error(err.message);
-      throw new Error("Failed to login: " + err.message);
+      this.logger.error(err);
+      this.logger.error(err.response);
+      throw new Error("Failed to login: " + err.response.data.message);
     }
   };
 

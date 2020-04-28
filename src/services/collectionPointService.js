@@ -54,7 +54,7 @@ class CollectionPointService {
 
     } catch (error) {
       this.logger.error("error: ", error.message);
-      throw new Error(error.message);
+      throw new Error("Failed to fetch collection points: " + error.response.data.message);
     }
   };
 
