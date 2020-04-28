@@ -51,8 +51,7 @@ function Navigation(props : Props) {
             <Nav className="mr-auto">
               {props.user != null ?
                   <Fragment>
-                    <Link to={URL_SELECT_LOCATION} onClick={onSelect}>Select Location</Link>
-                    <Link to={URL_CREATE_ORDER} onClick={onSelect}>Create Order</Link>
+                    <Link to={URL_SELECT_LOCATION} onClick={onSelect}>Create Order</Link>
                     <Link to={URL_ORDERS} onClick={onSelect}>My orders</Link>
                     <NavDropdown.Divider />
                     <Button variant={"info"} block onClick={logout}>Logout</Button>
