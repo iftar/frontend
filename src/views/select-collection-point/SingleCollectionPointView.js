@@ -40,7 +40,7 @@ function SingleCollectionPointView(props: Props) {
 
   return (
         <ThemedCard>
-          <View style={{display: "flex", flexDirection: "row", justifyContent: "space-around", alignItems: "center",  width: "100%", height: "350px", paddingBottom: "50px"}}>
+          <View style={{justifyContent: "space-around", alignItems: "center",  width: "100%", paddingTop: "10px", paddingBottom: "20px"}}>
             {/* <SingleCollectionImage/> */}
             <View onClick={onClick} style={{display: "flex", flex: 1, flexDirection: "column", justifyContent: "space-around", alignItems: "flex-start"}}>
               <Text style={{fontWeight: "bold", fontSize: "1.2em", paddingBottom: "15px"}}>{collectionPoint.name}</Text>
