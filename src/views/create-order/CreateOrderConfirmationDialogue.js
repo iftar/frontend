@@ -101,7 +101,7 @@ function CreateOrderConfirmationDialogue (props : Props) {
         <View style={{display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", paddingTop: "20px"}}>
           <View style={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start"}}>
             <HeadingText color={"white"}>Iftar</HeadingText>
-            <HeadingText color={"white"}>Pack:</HeadingText>
+            <HeadingText color={"white"}>Pack(s):</HeadingText>
           </View>
           <Text color={"white"} style={{fontSize: "5em", fontWeight: "bold", paddingLeft: "30px"}}>{orderCreation.quantity}</Text>
         </View>
