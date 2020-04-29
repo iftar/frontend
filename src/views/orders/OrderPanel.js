@@ -8,7 +8,7 @@ import {
   faBox, faBuilding,
   faClock,
   faLocationArrow, faMapPin,
-  faTimes, faTruck, faWalking,
+  faTimes, faTruck, faWalking, faStore, faHeadSideMask,
 } from '@fortawesome/free-solid-svg-icons';
 import CircleIcon from '../../components/icons/CircleIcon';
 import LightText from '../../components/element-wrappers/LightText';
@@ -36,15 +36,14 @@ function OrderPanel(props: Props) {
         <Fragment>
           <ThemedCard>
             <View style={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "center", width: "100%", paddingBottom: "20px"}}>
-              <SubHeadingText style={{letterSpacing: "0.2em", textTransform: "uppercase", fontStyle: "italic"}}>Delivery</SubHeadingText>
+              <SubHeadingText style={{letterSpacing: "0.2em", textTransform: "uppercase", fontWeight: "bold", marginBottom: "10px"}}>Order number #{order.id}</SubHeadingText>
+              <IconWithTextPanel icon={faTruck} text={"Delivery"}/>
               <IconWithTextPanel icon={faBuilding} text={collectionPoint.name}/>
               <IconWithTextPanel icon={faBicycle} text={AddressUtil.getFullAddressFormattedFromOrder(order)}/>
-
-              <View style={{display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", width: "100%", paddingTop: "20px"}}>
-                <IconWithTextPanel icon={faBox} text={`Iftar Pack x ${order.quantity}`}/>
-              </View>
+              <IconWithTextPanel icon={faBox} text={`Iftar Pack x ${order.quantity}`}/>
             </View>
-            {onClick && <Button variant={"secondary"} block disabled>Edit</Button>}
+            <Text>If you need to edit your order please contact us on <a href={"mailto:shareiftar@gmail.com"}>shareiftar@gmail.com</a>.</Text>
+            {/* {onClick && <Button variant={"secondary"} block disabled>Edit</Button>} */}
           </ThemedCard>
         </Fragment>
     )
@@ -56,16 +55,18 @@ function OrderPanel(props: Props) {
         <Fragment>
           <ThemedCard>
             <View style={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "center", width: "100%", paddingBottom: "20px"}}>
-              <SubHeadingText style={{letterSpacing: "0.2em", textTransform: "uppercase", fontStyle: "italic"}}>Collection</SubHeadingText>
+              <SubHeadingText style={{letterSpacing: "0.2em", textTransform: "uppercase", fontWeight: "bold", marginBottom: "10px"}}>Order number #{order.id}</SubHeadingText>
+              <IconWithTextPanel icon={faStore} text={"Collection"}/>
               <IconWithTextPanel icon={faBuilding} text={collectionPoint.name}/>
-              <IconWithTextPanel icon={faMapPin} text={AddressUtil.getFullAddressFormattedFromCollectionPoint(collectionPoint)}/>
-
-              <View style={{display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", width: "100%", paddingTop: "20px"}}>
-                <IconWithTextPanel icon={faBox} text={`Iftar Pack x ${order.quantity}`}/>
-                <IconWithTextPanel icon={faClock} text={collectionPointTimeSlot.start_time}/>
-              </View>
+              <IconWithTextPanel icon={faMapPin} text={AddressUtil.getFullAddressFormattedFromCollectionPoint(collectionPoint)} />
+              <IconWithTextPanel icon={faBox} text={`Iftar Pack x ${order.quantity}`}/>
+              <IconWithTextPanel icon={faClock} text={collectionPointTimeSlot.start_time}/>
+              <IconWithTextPanel icon={faHeadSideMask} text={
+                "Please observe government social distancing when you arrive to collect your meals."
+              }/>
             </View>
-            {onClick && <Button variant={"secondary"} block disabled>Edit</Button>}
+            <Text>If you need to edit your order please contact us on <a href={"mailto:shareiftar@gmail.com"}>shareiftar@gmail.com</a>.</Text>
+            {/* {onClick && <Button variant={"secondary"} block disabled>Edit</Button>} */}
           </ThemedCard>
         </Fragment>
     )

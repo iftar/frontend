@@ -43,7 +43,7 @@ function Navigation(props : Props) {
         justifyContent: 'center',
       }}>
         <Navbar expand={false} expanded={expanded} style={{width: "100%"}} onToggle={onToggle}>
-          <Navbar.Brand>
+          <Navbar.Brand href={"/"}>
             <Image src={logo} height={"60px"} />
           </Navbar.Brand>
           <Navbar.Toggle onClick={onToggle}/>

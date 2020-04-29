@@ -26,6 +26,7 @@ import NoItemsFound from '../../components/NoItemsFound';
 import ThemedCard from '../../components/cards/ThemedCard';
 import SubHeadingText from '../../components/element-wrappers/SubHeadingText';
 import LightText from '../../components/element-wrappers/LightText';
+import Text from '../../components/element-wrappers/Text';
 import {useDebounce} from 'react-use';
 import debounce from 'lodash-es/debounce';
 
@@ -122,12 +123,15 @@ function SelectCollectionPointView(props: Props) {
     }
     else {
       return (
-          props.collectionPoints.map(collectionPoint =>
-              <SingleCollectionPointView
-                  key={collectionPoint.id}
-                  collectionPoint={collectionPoint}
-                  onClick={() => onCollectionPointsSelected(collectionPoint)}
-              />)
+        <div style={{marginBottom: "50px"}}>
+          <Text style={{fontWeight: "bold", marginBottom: "10px"}}>{props.collectionPoints.length} {props.collectionPoints.length > 1 ? "locations" : "location"} found</Text>
+          {props.collectionPoints.map(collectionPoint =>
+            <SingleCollectionPointView
+                key={collectionPoint.id}
+                collectionPoint={collectionPoint}
+                onClick={() => onCollectionPointsSelected(collectionPoint)}
+            />)}
+        </div>
       );
     }
   }
@@ -142,7 +146,7 @@ function SelectCollectionPointView(props: Props) {
           {/*</Button>*/}
           <Form.Control type="input" placeholder="Enter your postcode..." size={"lg"} onChange={(event) => onPostcodeChange(event.target.value)} />
         </View>
-        <View style={{display: "flex", flexDirection: "column", width: "100%", justifyContent: "flex-start", alignItems: "center"}}>
+        <View style={{width: "100%", justifyContent: "flex-start", alignItems: "center"}}>
           {renderElements()}
         </View>
       </PaddedScrollableYView>
