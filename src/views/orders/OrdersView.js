@@ -14,6 +14,7 @@ import Order from '../../models/Order';
 import {fetchOrders} from '../../store/orders/actions';
 import PaddedScrollableYView
   from '../../components/views/PaddedScrollableYView';
+import Text from '../../components/element-wrappers/Text';
 
 type Props = {
   orders: Array<Order>,
@@ -62,6 +63,9 @@ function OrdersView(props : Props) {
     } else {
       return (
           <Fragment>
+            <div className="alert alert-info">
+              <Text style={{fontWeight: "bold"}}>Please note orders can only be placed between 12am and 2pm each day.</Text>
+            </div>
             <OrdersTodayView orders={todaysOrders}/>
             <OrdersHistoryView orders={historicOrders}/>
           </Fragment>
