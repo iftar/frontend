@@ -142,7 +142,7 @@ function SelectCollectionPointView(props: Props) {
           {/*</Button>*/}
           <Form.Control type="input" placeholder="Enter your postcode..." size={"lg"} onChange={(event) => onPostcodeChange(event.target.value)} />
         </View>
-        <View style={{display: "flex", flexDirection: "column", width: "100%", justifyContent: "flex-start", alignItems: "center"}}>
+        <View style={{display: "flex", flexDirection: "column", width: "100%", justifyContent: "flex-start", alignItems: "center", marginBottom: "100px"}}>
           {renderElements()}
         </View>
       </PaddedScrollableYView>
