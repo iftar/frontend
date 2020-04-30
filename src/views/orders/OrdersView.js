@@ -15,13 +15,18 @@ import {fetchOrders} from '../../store/orders/actions';
 import PaddedScrollableYView
   from '../../components/views/PaddedScrollableYView';
 import Text from '../../components/element-wrappers/Text';
+import OrderCreation from '../../models/OrderCreation';
+import CreateOrderConfirmationDialogue
+  from '../create-order/CreateOrderConfirmationDialogue';
 
 type Props = {
   orders: Array<Order>,
   loading: boolean,
   error: string,
+  token: string,
 
   fetchOrders: () => void,
+  createOrder: (orderCreation: OrderCreation) => void,
 }
 
 function OrdersView(props : Props) {
@@ -29,6 +34,7 @@ function OrdersView(props : Props) {
 
   const [todaysOrders, setTodaysOrders] = useState([]);
   const [historicOrders, setHistoricOrders] = useState([]);
+  const [orderCreation, setOrderCreation] = useState(null);
 
   const history = useHistory();
 
@@ -54,12 +60,35 @@ function OrdersView(props : Props) {
     setTodaysOrders(ordersForToday);
     setHistoricOrders(ordersForHistory);
   }, [props.orders]);
+  
+  function onReorderClick(order: Order) {
+    const orderCreation = new OrderCreation();
+    orderCreation.first_name = order.first_name;
+    orderCreation.last_name = order.last_name;
+    orderCreation.email = order.email;
+    orderCreation.quantity = order.quantity;
+    orderCreation.collection_point = order.collection_point;
+    orderCreation.collection_point_time_slot = order.collection_point_time_slot;
+    orderCreation.notes = order.notes;
+
+    // Delivery only
+    orderCreation.phone = order.phone;
+    orderCreation.address_line_1 = order.address_line_1;
+    orderCreation.address_line_2 = order.address_line_2;
+    orderCreation.city = order.city;
+    orderCreation.county = order.county;
+    orderCreation.post_code = order.post_code;
+    
+    setOrderCreation(orderCreation);
+  }
 
   function renderElements() {
     if (props.loading) {
       return <Loading/>;
     } else if (props.error) {
       return <Error>{props.error}</Error>;
+    } else if (orderCreation) {
+      return <CreateOrderConfirmationDialogue orderCreation={orderCreation} onClose={() => setOrderCreation(null)} token={props.token}/>
     } else {
       return (
           <Fragment>
@@ -70,7 +99,7 @@ function OrdersView(props : Props) {
               <OrdersTodayView orders={todaysOrders}/>
             </div>
             <div>
-              <OrdersHistoryView orders={historicOrders}/>
+              <OrdersHistoryView orders={historicOrders} onReorderClick={onReorderClick}/>
             </div>
           </Fragment>
       );

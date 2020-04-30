@@ -8,6 +8,7 @@ const mapStateToProps = (state) => ({
   orders: state.orders.orders,
   error: state.orders.error,
   loading: state.orders.loading,
+  token: state.auth.token,
 });
 
 const mapDispatchToProps = (dispatch) => ({
