@@ -21,61 +21,45 @@ import SubHeadingText from '../../components/element-wrappers/SubHeadingText';
 
 type Props = {
   order: Order,
+  buttonText: string,
+  onClick: (order: Order) => void,
 }
 
 function OrderPanel(props: Props) {
 
   const order = props.order;
-  const onClick = props.onClick;
+  const onClick = props.onClick || null;
 
   const collectionPoint = order.collection_point;
   const collectionPointTimeSlot = order.collection_point_time_slot;
 
-  function renderOrderForDelivery() {
-    return (
+  return (
+      <ErrorBoundary>
+      <View style={{marginTop: "10px", marginLeft: "5px", marginRight: "5px", width: "100%"}}>
         <Fragment>
           <ThemedCard>
             <View style={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "center", width: "100%", paddingBottom: "20px"}}>
               <SubHeadingText style={{letterSpacing: "0.2em", textTransform: "uppercase", fontWeight: "bold", marginBottom: "10px"}}>Order number #{order.id}</SubHeadingText>
               <IconWithTextPanel icon={faTruck} text={"Delivery"}/>
               <IconWithTextPanel icon={faBuilding} text={collectionPoint.name}/>
-              <IconWithTextPanel icon={faBicycle} text={AddressUtil.getFullAddressFormattedFromOrder(order)}/>
+              {order.isDelivery() ?
+                  <IconWithTextPanel icon={faBicycle} text={AddressUtil.getFullAddressFormattedFromOrder(order)}/>
+              :
+                  <IconWithTextPanel icon={faMapPin} text={AddressUtil.getFullAddressFormattedFromCollectionPoint(collectionPoint)} />}
               <IconWithTextPanel icon={faBox} text={`Iftar Pack x ${order.quantity}`}/>
+              {!order.isDelivery() &&
+              <Fragment>
+                <IconWithTextPanel icon={faClock} text={collectionPointTimeSlot.start_time}/>
+                <IconWithTextPanel icon={faHeadSideMask} text={
+                  "Please observe government social distancing when you arrive to collect your meals."
+                }/>
+              </Fragment>
+              }
             </View>
-            <Text>If you need to edit your order please contact us on <a href={"mailto:shareiftar@gmail.com"}>shareiftar@gmail.com</a>.</Text>
-            {/* {onClick && <Button variant={"secondary"} block disabled>Edit</Button>} */}
+            <Text style={{marginBottom: "20px"}}>If you need to edit your order please contact us on <a href={"mailto:info@shareiftar.org"}>info@shareiftar.org</a>.</Text>
+            {(onClick != null && props.buttonText) && <Button variant={"outline-primary"} block onClick={props.onClick}>{props.buttonText}</Button>}
           </ThemedCard>
         </Fragment>
-    )
-
-  }
-
-  function renderOrderForCollection() {
-    return (
-        <Fragment>
-          <ThemedCard>
-            <View style={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "center", width: "100%", paddingBottom: "20px"}}>
-              <SubHeadingText style={{letterSpacing: "0.2em", textTransform: "uppercase", fontWeight: "bold", marginBottom: "10px"}}>Order number #{order.id}</SubHeadingText>
-              <IconWithTextPanel icon={faStore} text={"Collection"}/>
-              <IconWithTextPanel icon={faBuilding} text={collectionPoint.name}/>
-              <IconWithTextPanel icon={faMapPin} text={AddressUtil.getFullAddressFormattedFromCollectionPoint(collectionPoint)} />
-              <IconWithTextPanel icon={faBox} text={`Iftar Pack x ${order.quantity}`}/>
-              <IconWithTextPanel icon={faClock} text={collectionPointTimeSlot.start_time}/>
-              <IconWithTextPanel icon={faHeadSideMask} text={
-                "Please observe government social distancing when you arrive to collect your meals."
-              }/>
-            </View>
-            <Text>If you need to edit your order please contact us on <a href={"mailto:shareiftar@gmail.com"}>shareiftar@gmail.com</a>.</Text>
-            {/* {onClick && <Button variant={"secondary"} block disabled>Edit</Button>} */}
-          </ThemedCard>
-        </Fragment>
-    )
-  }
-
-  return (
-      <ErrorBoundary>
-      <View style={{marginTop: "10px", marginLeft: "5px", marginRight: "5px", width: "100%"}}>
-          {order.isDelivery() ? renderOrderForDelivery() : renderOrderForCollection()}
       </View>
       </ErrorBoundary>
   )

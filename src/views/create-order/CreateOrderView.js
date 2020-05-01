@@ -127,10 +127,10 @@ const CreateOrderView = (props: Props) => {
     orderCreation.collection_point_time_slot =
       props.collectionPoint.collection_point_time_slots[selectedTimeSlotIndex];
     orderCreation.notes = notes;
+    orderCreation.phone = phone;
 
     // Delivery only
     if (!isCollection) {
-      orderCreation.phone = phone;
       orderCreation.address_line_1 = addressLine1;
       orderCreation.address_line_2 = addressLine2;
       orderCreation.city = city;
@@ -205,22 +205,16 @@ const CreateOrderView = (props: Props) => {
           <Form.Text className="text-muted">
             Please be mindful of others, and take only as much as you need.
           </Form.Text>
+          <br/>
+          <Form.Label>Dietary Requirements</Form.Label>
+          <Form.Control
+              as={"textarea"}
+              required
+              defaultValue={notes}
+              onChange={event => setNotes(event.target.value)}
+          />
         </ThemedCard>
       </Fragment>
-    );
-  }
-
-  function renderDietaryRequirements() {
-    return (
-      <ThemedCard>
-        <Form.Label>Dietary Requirements</Form.Label>
-        <Form.Control
-          as={"textarea"}
-          required
-          defaultValue={notes}
-          onChange={event => setNotes(event.target.value)}
-        />
-      </ThemedCard>
     );
   }
 
@@ -258,8 +252,7 @@ const CreateOrderView = (props: Props) => {
             />
             }
           </View>
-          {!isCollection && (
-            <View
+          <View
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -268,7 +261,9 @@ const CreateOrderView = (props: Props) => {
                 width: "100%",
                 paddingTop: "30px"
               }}
-            >
+          >
+          {!isCollection && (
+              <Fragment>
               <hr />
               <LightText>Delivery Details:</LightText>
 
@@ -333,23 +328,23 @@ const CreateOrderView = (props: Props) => {
               </Form.Control.Feedback>
 
               <br />
-
-              <Form.Label>
-                Phone Number <small>(required)</small>
-              </Form.Label>
-              <Form.Control
-                as={"input"}
-                value={phone}
-                required
-                onChange={event => setPhone(event.target.value)}
-              />
-              <Form.Control.Feedback type="invalid">
-                We need your phone number is required, what if we can't locate
-                you?
-              </Form.Control.Feedback>
-              <br />
-            </View>
+              </Fragment>
           )}
+
+          <Form.Label>
+            Phone Number <small>(required)</small>
+          </Form.Label>
+          <Form.Control
+              as={"input"}
+              value={phone}
+              required
+              onChange={event => setPhone(event.target.value)}
+          />
+          <Form.Control.Feedback type="invalid">
+            We need your phone number so that we can contact you if we can't locate you.
+          </Form.Control.Feedback>
+          <br />
+          </View>
         </ThemedCard>
       </Fragment>
     );
@@ -407,8 +402,6 @@ const CreateOrderView = (props: Props) => {
             {renderCollectionCenterDetailsPanel()}
 
             {renderIftarPacksOptionPanel()}
-
-            {renderDietaryRequirements()}
 
             {renderDeliveryOptionsPanel()}
 

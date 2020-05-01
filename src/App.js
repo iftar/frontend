@@ -27,6 +27,7 @@ import ForgotPasswordViewContainer from "./views/forgot-password/ForgotPasswordV
 import OrdersViewContainer from "./views/orders/OrdersViewContainer";
 import { bindActionCreators } from "redux";
 import { fetchRefreshLogin } from "./store/auth/actions";
+import User from './models/User';
 
 type Props = {
   user: User,
