@@ -341,7 +341,7 @@ const CreateOrderView = (props: Props) => {
               onChange={event => setPhone(event.target.value)}
           />
           <Form.Control.Feedback type="invalid">
-            We need your phone number is required, what if we can't locate
+            We need your phone number so that we can contact you if we can't locate you.
             you?
           </Form.Control.Feedback>
           <br />
