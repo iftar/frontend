@@ -342,7 +342,6 @@ const CreateOrderView = (props: Props) => {
           />
           <Form.Control.Feedback type="invalid">
             We need your phone number so that we can contact you if we can't locate you.
-            you?
           </Form.Control.Feedback>
           <br />
           </View>
