@@ -56,7 +56,7 @@ function OrderPanel(props: Props) {
               </Fragment>
               }
             </View>
-            <Text style={{marginBottom: "20px"}}>If you need to edit your order please contact us on <a href={"mailto:shareiftar@gmail.com"}>shareiftar@gmail.com</a>.</Text>
+            <Text style={{marginBottom: "20px"}}>If you need to edit your order please contact us on <a href={"mailto:info@shareiftar.org"}>info@shareiftar.org</a>.</Text>
             {(onClick != null && props.buttonText) && <Button variant={"outline-primary"} block onClick={props.onClick}>{props.buttonText}</Button>}
           </ThemedCard>
         </Fragment>
