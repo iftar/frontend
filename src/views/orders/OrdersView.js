@@ -93,7 +93,7 @@ function OrdersView(props : Props) {
       return (
           <Fragment>
             <div className="alert alert-info">
-              <Text style={{fontWeight: "bold"}}>Please note orders can only be placed between 12am and 2pm each day.</Text>
+              <Text style={{fontWeight: "bold"}}>Please note orders can only be placed between 12am and 3pm each day.</Text>
             </div>
             <div>
               <OrdersTodayView orders={todaysOrders}/>
