@@ -47,9 +47,13 @@ function LoginView(props: Props) {
     if (props.error || isEmpty(state)) {
       return null;
     } else if (state === "password_reset_successfully") {
-      message = "Your password has been reset successfully, please login."
+      message = "Your password has been reset successfully, please sign in."
     } else if (state === "email_verified") {
       message = "Your email has been verified, you're all good to go!"
+    } else if (state === "registration_complete") {
+      message = "We have sent you a verification email, please verify your email before you sign in."
+    } else {
+      return null;
     }
 
     return <Alert variant={"success"}>{message}</Alert>
