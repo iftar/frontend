@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { register } from '../../util/api'
 import {useHistory} from 'react-router-dom'
-import { Link } from "react-router-dom";
 
 import './signup.css';
 
@@ -9,6 +8,7 @@ import './signup.css';
 import logo from '../../assets/images/shareiftar-logo.png';
 import PaddedScrollableYView
   from '../../components/views/PaddedScrollableYView';
+import {URL_LOGIN} from '../../constants/urls';
 
 type Props = {
   login: (email: string, password: string) => void,
@@ -20,9 +20,7 @@ function SignUpView(props: Props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirmPassword] = useState('');
-  const [hasUserSignedUp, setHasUserSignedUp] = useState(false);
 
-  
   const history = useHistory();
 
   const firstnameInputHandler = (e) => {
@@ -49,8 +47,7 @@ function SignUpView(props: Props) {
     register(firstname, lastname, email, password, confirm)
       .then(result => {
         if (result.status === "success") {
-          setHasUserSignedUp(true);
-          // history.push("/login");
+          history.push(URL_LOGIN + "?state=registration_complete");
         }
         else if (result.status === "error") {
           setErrorMessage(result.message);
@@ -99,15 +96,6 @@ function SignUpView(props: Props) {
                   }
                   <hr className="my-4" />
                   <button className="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Register</button>
-                  
-
-                {hasUserSignedUp === true ? (
-                    <div className="account"> 
-                    <hr className="my-4" />
-                    <p> Your account has been created. </p>
-                        <p>Please verify your email before logging in. <span className="signup_button"><Link to={"/login"}> Sign In  </Link> </span></p>
-                    </div>
-                  ) : <p className="no_error_message"> </p>} 
                 </form>
               </div>
             </div>
