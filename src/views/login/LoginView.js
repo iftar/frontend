@@ -2,17 +2,18 @@ import React, { useState } from "react";
 import { login } from "../../util/api";
 import "./login.css";
 import { Link } from "react-router-dom";
-import { useHistory } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 // Images
 import logo from "./../../assets/images/shareiftar-logo.png";
-import { Col, Container, Row } from "react-bootstrap";
+import {Alert, Col, Container, Row} from 'react-bootstrap';
 import ThemedCard from "../../components/cards/ThemedCard";
 import { URL_FORGOT_PASSWORD, URL_SELECT_LOCATION } from "../../constants/urls";
 import Loading from "../../components/Loading";
 import Error from "../../components/Error";
 import View from "../../components/element-wrappers/View";
 import PaddedScrollableYView from "../../components/views/PaddedScrollableYView";
+import isEmpty from 'lodash-es/isEmpty';
 
 type Props = {
   loading: boolean,
@@ -24,7 +25,7 @@ function LoginView(props: Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const history = useHistory();
+  const location = useLocation();
 
   const emailInputHandler = e => {
     setEmail(e.target.value);
@@ -35,10 +36,24 @@ function LoginView(props: Props) {
 
   const submitHandler = e => {
     e.preventDefault();
-    console.log("email and password", email, password);
-
     props.login(email, password);
   };
+
+  function renderInfoAlertFromRedirect() {
+    let message;
+    const searchParams = new URLSearchParams(location.search);
+    const state = searchParams.get("state");
+
+    if (props.error || isEmpty(state)) {
+      return null;
+    } else if (state === "password_reset_successfully") {
+      message = "Your password has been reset successfully, please login."
+    } else if (state === "email_verified") {
+      message = "Your email has been verified, you're all good to go!"
+    }
+
+    return <Alert variant={"success"}>{message}</Alert>
+  }
 
   function renderElements() {
     if (props.loading) {
@@ -47,6 +62,7 @@ function LoginView(props: Props) {
       return (
         <Container>
           {props.error && <Error>{props.error}</Error>}
+          {renderInfoAlertFromRedirect()}
           <form className="form-signin" onSubmit={submitHandler}>
             <div className="form-label-group">
               <input
