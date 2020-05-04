@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { register } from '../../util/api'
 import {useHistory} from 'react-router-dom'
-import { Link } from "react-router-dom";
 
 import './signup.css';
 
@@ -9,7 +8,6 @@ import './signup.css';
 import logo from '../../assets/images/shareiftar-logo.png';
 import PaddedScrollableYView
   from '../../components/views/PaddedScrollableYView';
-import {useTimeoutFn} from 'react-use';
 import {URL_LOGIN} from '../../constants/urls';
 
 type Props = {
@@ -49,7 +47,7 @@ function SignUpView(props: Props) {
     register(firstname, lastname, email, password, confirm)
       .then(result => {
         if (result.status === "success") {
-          history.push(URL_LOGIN + "?state=email_verified_pending");
+          history.push(URL_LOGIN + "?state=registration_complete");
         }
         else if (result.status === "error") {
           setErrorMessage(result.message);
