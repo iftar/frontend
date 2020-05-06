@@ -40,12 +40,13 @@ function OrderPanel(props: Props) {
           <ThemedCard>
             <View style={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "center", width: "100%", paddingBottom: "20px"}}>
               <SubHeadingText style={{letterSpacing: "0.2em", textTransform: "uppercase", fontWeight: "bold", marginBottom: "10px"}}>Order number #{order.id}</SubHeadingText>
-              <IconWithTextPanel icon={faTruck} text={"Delivery"}/>
-              <IconWithTextPanel icon={faBuilding} text={collectionPoint.name}/>
               {order.isDelivery() ?
-                  <IconWithTextPanel icon={faBicycle} text={AddressUtil.getFullAddressFormattedFromOrder(order)}/>
-              :
-                  <IconWithTextPanel icon={faMapPin} text={AddressUtil.getFullAddressFormattedFromCollectionPoint(collectionPoint)} />}
+                  <IconWithTextPanel icon={faTruck} text={"Delivery"}/>
+                  :
+                  <IconWithTextPanel icon={faWalking} text={"Collection"}/>
+              }
+              <IconWithTextPanel icon={faBuilding} text={collectionPoint.name}/>
+              <IconWithTextPanel icon={faMapPin} text={order.isDelivery() ? AddressUtil.getFullAddressFormattedFromOrder(order) : AddressUtil.getFullAddressFormattedFromCollectionPoint(collectionPoint)}/>
               <IconWithTextPanel icon={faBox} text={`Iftar Pack x ${order.quantity}`}/>
               {!order.isDelivery() &&
               <Fragment>
