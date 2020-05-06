@@ -20,6 +20,8 @@ import OrderCreationServerRequest
   from '../../models/OrderCreationServerRequest';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCheckCircle} from '@fortawesome/free-solid-svg-icons';
+import collectionPointService from '../../services/collectionPointService';
+import isEmpty from 'lodash-es/isEmpty';
 
 type Props = {
   orderCreation: OrderCreation,
@@ -41,10 +43,25 @@ function CreateOrderConfirmationDialogue (props : Props) {
     setLoading(true);
     setError(null);
     const orderServerRequest = createOrderRequest(orderCreation);
-    ordersService.createOrder(props.token, orderServerRequest)
-    .then((data) => setConfirmedOrder(data))
-    .catch((error) => setError(error.message))
-    .finally(() => setLoading(false))
+    if (!isEmpty(orderServerRequest.post_code)) {
+      collectionPointService.canDeliverToLocation(props.token,
+          orderServerRequest.collection_point_id, orderServerRequest.post_code).
+          then((canDeliver) => canDeliver
+              ? createOrder(orderServerRequest)
+              : setError(`You are not eligible for deliveries from ${orderCreation.collection_point.name}.`)).
+          catch((error) => setError(error.message)).
+          finally(() => setLoading(false));
+    } else {
+      createOrder(orderServerRequest);
+    }
+  }
+
+  function createOrder(orderServerRequest: OrderCreationServerRequest) {
+    setLoading(true);
+    ordersService.createOrder(props.token, orderServerRequest).
+        then((data) => setConfirmedOrder(data)).
+        catch((error) => setError(error.message)).
+        finally(() => setLoading(false));
   }
 
   function renderElements() {

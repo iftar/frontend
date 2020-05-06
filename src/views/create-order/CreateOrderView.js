@@ -1,18 +1,11 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import {
-  Container,
-  Card,
   Form,
-  ButtonGroup,
-  ToggleButton,
-  Button
-} from "react-bootstrap";
-import HeadingText from "../../components/element-wrappers/HeadingText";
-import CircleIconButton from "../../components/button/CircleIconButton";
+  Button,
+} from 'react-bootstrap';
 import View from "../../components/element-wrappers/View";
 import { useHistory } from "react-router-dom";
 
-import bluePin from "../../assets/images/bluepin.png";
 import ThemedCard from "../../components/cards/ThemedCard";
 import {
   faBuilding,
@@ -24,17 +17,14 @@ import AddressUtil from "../../util/AddressUtil";
 import CollectionPoint from "../../models/CollectionPoint";
 import { URL_ORDERS, URL_SELECT_LOCATION } from "../../constants/urls";
 import LightText from "../../components/element-wrappers/LightText";
-import ErrorBoundary from "../../components/ErrorBoundary";
 import Error from "../../components/Error";
 import Logger from "../../util/Logger";
-import moment from "moment";
 import Loading from "../../components/Loading";
 import CreateOrderConfirmationDialogue from "./CreateOrderConfirmationDialogue";
 import OrderCreation from "../../models/OrderCreation";
 import Header from "../../components/Header";
 import User from "../../models/User";
 import ordersService from "../../services/ordersService";
-import Order from "../../models/Order";
 import PaddedScrollableYView from "../../components/views/PaddedScrollableYView";
 
 type Props = {

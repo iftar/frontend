@@ -97,6 +97,30 @@ class CollectionPointService {
     }
   };
 
+
+  canDeliverToLocation = async function(token: string, id: number, postcode: string) : Array<CollectionPoint> {
+    try {
+      const response = await axios.post(`${BASE_URL}/api/collection-points/${id}/can-deliver-to-location`, {
+        address: postcode,
+      }, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      const data = response.data;
+      this.logger.info("data: ", data);
+      if (data.status === "success") {
+        return data.data.can_deliver_to_location;
+      } else {
+        return false;
+      }
+
+    } catch (error) {
+      this.logger.error("error: ", error.message);
+      throw new Error("Failed to check if delivery is valid: " + error.response.data.message);
+    }
+  };
+
 }
 
 export default new CollectionPointService();
