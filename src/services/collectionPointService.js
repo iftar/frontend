@@ -101,7 +101,7 @@ class CollectionPointService {
   canDeliverToLocation = async function(token: string, id: number, postcode: string) : Array<CollectionPoint> {
     try {
       const response = await axios.post(`${BASE_URL}/api/collection-points/${id}/can-deliver-to-location`, {
-        address: postcode,
+        postcode: postcode,
       }, {
         headers: {
           Authorization: "Bearer " + token,

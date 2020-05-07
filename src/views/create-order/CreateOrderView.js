@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import {
   Form,
-  Button,
+  Button, Alert,
 } from 'react-bootstrap';
 import View from "../../components/element-wrappers/View";
 import { useHistory } from "react-router-dom";
@@ -26,6 +26,9 @@ import Header from "../../components/Header";
 import User from "../../models/User";
 import ordersService from "../../services/ordersService";
 import PaddedScrollableYView from "../../components/views/PaddedScrollableYView";
+import {useDebounce} from 'react-use';
+import collectionPointService from '../../services/collectionPointService';
+import isEmpty from 'lodash-es/isEmpty';
 
 type Props = {
   user: User,
@@ -39,6 +42,7 @@ const CreateOrderView = (props: Props) => {
 
   // For form validation
   const formRef = useRef();
+  const postcodeFieldRef = useRef();
 
   //
   const [iftarOrders, setIftarOrders] = useState(1);
@@ -54,6 +58,8 @@ const CreateOrderView = (props: Props) => {
   const [county, setCounty] = useState("");
   const [postCode, setPostCode] = useState("");
   const [isFormValidated, setIsFormValidated] = useState("");
+  const [isPostCodeValidForDelivery, setIsPostCodeValidForDelivery] = useState(false);
+  const [postCodeError, setPostCodeError] = useState(null);
 
   const [orderCreation: OrderCreation, setOrderCreation] = useState(null);
 
@@ -68,6 +74,17 @@ const CreateOrderView = (props: Props) => {
       history.push(URL_SELECT_LOCATION);
     }
   }, [props.collectionPoint]);
+
+  useDebounce(() => {
+    logger.info("postcodeFieldRef", postcodeFieldRef.current);
+    setPostCodeError(null);
+    collectionPointService.canDeliverToLocation(props.token, props.collectionPoint.id, postCode)
+        .then((isValid) => {
+          logger.info("setIsPostCodeValidForDelivery", isValid)
+          setIsPostCodeValidForDelivery(isValid)
+        })
+        .catch((err) => setPostCodeError(err.message));
+  }, 500, [postCode]);
 
   function onOrderSubmit() {
     // const form = event.currentTarget;
@@ -254,85 +271,99 @@ const CreateOrderView = (props: Props) => {
           >
           {!isCollection && (
               <Fragment>
-              <hr />
-              <LightText>Delivery Details:</LightText>
+                <hr />
+                <LightText>Delivery Details:</LightText>
 
-              <Form.Text className="text-muted">
-                Please only choose delivery if you have no other option,
-                otherwise. We have a limited amount of time to be able to
-                delivery to everyone and we want to make sure we can help those
-                who are the most vulnerable.
-              </Form.Text>
+                <Form.Text className="text-muted">
+                  Please only choose delivery if you have no other option,
+                  otherwise. We have a limited amount of time to be able to
+                  delivery to everyone and we want to make sure we can help those
+                  who are the most vulnerable.
+                </Form.Text>
 
-              <br />
+                <br />
 
-              <Form.Label>
-                Address Line 1 <small>(required)</small>
-              </Form.Label>
-              <Form.Control
-                type="text"
-                required
-                defaultValue={addressLine1}
-                onChange={event => setAddressLine1(event.target.value)}
-              />
-              <Form.Control.Feedback type="invalid">
-                We can't deliver without an address
-              </Form.Control.Feedback>
-              <br />
+                <Form.Group>
+                  <Form.Label>
+                    Address Line 1 <small>(required)</small>
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    required
+                    defaultValue={addressLine1}
+                    onChange={event => setAddressLine1(event.target.value)}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    We can't deliver without an address
+                  </Form.Control.Feedback>
+                </Form.Group>
+                <br />
 
-              <Form.Label>Address Line 2</Form.Label>
-              <Form.Control
-                as={"input"}
-                value={addressLine2}
-                onChange={event => setAddressLine2(event.target.value)}
-              />
-              <br />
+                <Form.Label>Address Line 2</Form.Label>
+                <Form.Control
+                  as={"input"}
+                  value={addressLine2}
+                  onChange={event => setAddressLine2(event.target.value)}
+                />
+                <br />
 
-              <Form.Label>City</Form.Label>
-              <Form.Control
-                as={"input"}
-                value={city}
-                onChange={event => setCity(event.target.value)}
-              />
-              <br />
+                <Form.Label>City</Form.Label>
+                <Form.Control
+                  as={"input"}
+                  value={city}
+                  onChange={event => setCity(event.target.value)}
+                />
+                <br />
 
-              <Form.Label>County</Form.Label>
-              <Form.Control
-                as={"input"}
-                value={county}
-                onChange={event => setCounty(event.target.value)}
-              />
-              <br />
+                <Form.Label>County</Form.Label>
+                <Form.Control
+                  as={"input"}
+                  value={county}
+                  onChange={event => setCounty(event.target.value)}
+                />
+                <br />
 
-              <Form.Label>
-                Postcode <small>(required)</small>
-              </Form.Label>
-              <Form.Control
-                as={"input"}
-                value={postCode}
-                required
-                onChange={event => setPostCode(event.target.value)}
-              />
-              <Form.Control.Feedback type="invalid">
-                We can't find your address without your postcode.
-              </Form.Control.Feedback>
+                <Form.Group>
+                  <Form.Label>
+                    Postcode <small>(required)</small>
+                  </Form.Label>
+                  <Form.Control
+                    as={"input"}
+                    value={postCode}
+                    required
+                    onChange={event => setPostCode(event.target.value)}
+                    isValid={(!isEmpty(postCode) ? isPostCodeValidForDelivery : null)}
+                    isInvalid={(!isEmpty(postCode) ? !isPostCodeValidForDelivery : null)}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {isEmpty(postCode)
+                        ? "We can't find your address without your postcode."
+                        : !isEmpty(postCodeError)
+                            ? postCodeError
+                            : `Your postcode is not eligible for deliveries from ${props.collectionPoint.name}.`
+                    }
+                  </Form.Control.Feedback>
+                </Form.Group>
 
-              <br />
+                <br />
               </Fragment>
           )}
 
-          <Form.Label>
-            Phone Number <small>(required)</small>
-          </Form.Label>
-          <Form.Control
-              as={"input"}
-              value={phone}
-              required
-              onChange={event => setPhone(event.target.value)}
-          />
-          <Form.Control.Feedback type="invalid">
-            We need your phone number so that we can contact you if we can't locate you.
-          </Form.Control.Feedback>
+            <Form.Group>
+              <Form.Label>
+                Phone Number <small>(required)</small>
+              </Form.Label>
+              <Form.Control
+                  as={"input"}
+                  value={phone}
+                  required
+                  onChange={event => setPhone(event.target.value)}
+              />
+              <Form.Control.Feedback type="invalid">
+                We need your phone number so that we can contact you if we can't locate you.
+              </Form.Control.Feedback>
+            </Form.Group>
+
           <br />
           </View>
         </ThemedCard>
