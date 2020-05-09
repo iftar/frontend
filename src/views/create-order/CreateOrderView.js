@@ -356,7 +356,9 @@ const CreateOrderView = (props: Props) => {
     if (collectionPointTimes === null) {
       return <Error>Could not load collection times.</Error>;
     }
-    const selectItems = collectionPointTimes.map((collectionPointTime, i) => {
+    const selectItems = collectionPointTimes
+      .filter(timeslot => timeslot.type === "user_pickup")
+      .map((collectionPointTime, i) => {
       return (
         <option key={collectionPointTime.id} value={i}>
           {collectionPointTime.start_time}
