@@ -39,6 +39,8 @@ type Props = {
 const CreateOrderView = (props: Props) => {
   const logger = new Logger(CreateOrderView.name);
   const IFTAR_ORDER_LIMIT = 10;
+  const PICKUP_COLLECTION_KEY = "user_pickup";
+  const PICKUP_DELIVERY_KEY = "charity_pickup";
 
   // For form validation
   const formRef = useRef();
@@ -405,15 +407,18 @@ const CreateOrderView = (props: Props) => {
     if (collectionPointTimes === null) {
       return <Error>Could not load collection times.</Error>;
     }
-    const selectItems = collectionPointTimes
-      .filter(timeslot => timeslot.type === "user_pickup")
-      .map((collectionPointTime, i) => {
-      return (
-        <option key={collectionPointTime.id} value={i}>
-          {collectionPointTime.start_time}
-        </option>
-      );
-    });
+
+    const timeSlotType = isCollection ? PICKUP_COLLECTION_KEY : PICKUP_DELIVERY_KEY;
+
+    const selectItems = collectionPointTimes.filter(
+        timeslot => timeslot.type === timeSlotType).
+        map((collectionPointTime, i) => {
+          return (
+              <option key={collectionPointTime.id} value={i}>
+                {collectionPointTime.start_time}
+              </option>
+          );
+        });
     return (
       <Fragment>
         <ThemedCard>
