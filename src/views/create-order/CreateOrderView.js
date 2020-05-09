@@ -1,18 +1,11 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import {
-  Container,
-  Card,
   Form,
-  ButtonGroup,
-  ToggleButton,
-  Button
-} from "react-bootstrap";
-import HeadingText from "../../components/element-wrappers/HeadingText";
-import CircleIconButton from "../../components/button/CircleIconButton";
+  Button, Alert,
+} from 'react-bootstrap';
 import View from "../../components/element-wrappers/View";
 import { useHistory } from "react-router-dom";
 
-import bluePin from "../../assets/images/bluepin.png";
 import ThemedCard from "../../components/cards/ThemedCard";
 import {
   faBuilding,
@@ -24,18 +17,18 @@ import AddressUtil from "../../util/AddressUtil";
 import CollectionPoint from "../../models/CollectionPoint";
 import { URL_ORDERS, URL_SELECT_LOCATION } from "../../constants/urls";
 import LightText from "../../components/element-wrappers/LightText";
-import ErrorBoundary from "../../components/ErrorBoundary";
 import Error from "../../components/Error";
 import Logger from "../../util/Logger";
-import moment from "moment";
 import Loading from "../../components/Loading";
 import CreateOrderConfirmationDialogue from "./CreateOrderConfirmationDialogue";
 import OrderCreation from "../../models/OrderCreation";
 import Header from "../../components/Header";
 import User from "../../models/User";
 import ordersService from "../../services/ordersService";
-import Order from "../../models/Order";
 import PaddedScrollableYView from "../../components/views/PaddedScrollableYView";
+import {useDebounce} from 'react-use';
+import collectionPointService from '../../services/collectionPointService';
+import isEmpty from 'lodash-es/isEmpty';
 
 type Props = {
   user: User,
@@ -46,9 +39,12 @@ type Props = {
 const CreateOrderView = (props: Props) => {
   const logger = new Logger(CreateOrderView.name);
   const IFTAR_ORDER_LIMIT = 10;
+  const PICKUP_COLLECTION_KEY = "user_pickup";
+  const PICKUP_DELIVERY_KEY = "charity_pickup";
 
   // For form validation
   const formRef = useRef();
+  const postcodeFieldRef = useRef();
 
   //
   const [iftarOrders, setIftarOrders] = useState(1);
@@ -64,6 +60,8 @@ const CreateOrderView = (props: Props) => {
   const [county, setCounty] = useState("");
   const [postCode, setPostCode] = useState("");
   const [isFormValidated, setIsFormValidated] = useState("");
+  const [isPostCodeValidForDelivery, setIsPostCodeValidForDelivery] = useState(false);
+  const [postCodeError, setPostCodeError] = useState(null);
 
   const [orderCreation: OrderCreation, setOrderCreation] = useState(null);
 
@@ -79,10 +77,19 @@ const CreateOrderView = (props: Props) => {
     }
   }, [props.collectionPoint]);
 
+  useDebounce(() => {
+    logger.info("postcodeFieldRef", postcodeFieldRef.current);
+    setPostCodeError(null);
+    collectionPointService.canDeliverToLocation(props.token, props.collectionPoint.id, postCode)
+        .then((isValid) => {
+          logger.info("setIsPostCodeValidForDelivery", isValid)
+          setIsPostCodeValidForDelivery(isValid)
+        })
+        .catch((err) => setPostCodeError(err.message));
+  }, 500, [postCode]);
+
   function onOrderSubmit() {
-    // const form = event.currentTarget;
-    setIsFormValidated(true);
-    if (formRef.current.checkValidity() === true) {
+    if (formRef.current.checkValidity() === true && isAddressLine1Valid() && isDietaryValid() && isPostcodeValid()) {
       logger.info("formRef", formRef);
       logger.info("success validation");
       const order = createOrderCreation();
@@ -90,8 +97,7 @@ const CreateOrderView = (props: Props) => {
     } else {
       logger.info("failed validation");
     }
-    // event.preventDefault();
-    // event.stopPropagation();
+    setIsFormValidated(true);
   }
 
   function onOrderConfirm() {
@@ -139,6 +145,22 @@ const CreateOrderView = (props: Props) => {
     }
 
     return orderCreation;
+  }
+
+  function isAddressLine1Valid() {
+    return !isEmpty(addressLine1);
+  }
+
+  function isDietaryValid() {
+    return !isEmpty(notes);
+  }
+
+  function isPhoneNumberValid() {
+    return !isEmpty(phone);
+  }
+
+  function isPostcodeValid() {
+    return !isEmpty(postCode) && isPostCodeValidForDelivery;
   }
 
   function renderCollectionCenterDetailsPanel() {
@@ -206,13 +228,18 @@ const CreateOrderView = (props: Props) => {
             Please be mindful of others, and take only as much as you need.
           </Form.Text>
           <br/>
-          <Form.Label>Dietary Requirements</Form.Label>
+          <Form.Label>Dietary Requirements <small>(required)</small></Form.Label>
           <Form.Control
               as={"textarea"}
               required
               defaultValue={notes}
               onChange={event => setNotes(event.target.value)}
+              isValid={isFormValidated && isDietaryValid()}
+              isInvalid={isFormValidated && !isDietaryValid()}
           />
+          <Form.Control.Feedback type="invalid">
+            Please leave N/A if you have no dietary requirements.
+          </Form.Control.Feedback>
         </ThemedCard>
       </Fragment>
     );
@@ -264,85 +291,109 @@ const CreateOrderView = (props: Props) => {
           >
           {!isCollection && (
               <Fragment>
-              <hr />
-              <LightText>Delivery Details:</LightText>
+                <hr />
+                <LightText>Delivery Details:</LightText>
 
-              <Form.Text className="text-muted">
-                Please only choose delivery if you have no other option,
-                otherwise. We have a limited amount of time to be able to
-                delivery to everyone and we want to make sure we can help those
-                who are the most vulnerable.
-              </Form.Text>
+                <Form.Text className="text-muted">
+                  Please only choose delivery if you have no other option,
+                  otherwise. We have a limited amount of time to be able to
+                  delivery to everyone and we want to make sure we can help those
+                  who are the most vulnerable.
+                </Form.Text>
 
-              <br />
+                <br />
 
-              <Form.Label>
-                Address Line 1 <small>(required)</small>
-              </Form.Label>
-              <Form.Control
-                type="text"
-                required
-                defaultValue={addressLine1}
-                onChange={event => setAddressLine1(event.target.value)}
-              />
-              <Form.Control.Feedback type="invalid">
-                We can't deliver without an address
-              </Form.Control.Feedback>
-              <br />
+                <Form.Group controlId="formGroupAddressLine1" style={{width: "100%"}}>
+                  <Form.Label>
+                    Address Line 1 <small>(required)</small>
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    required
+                    defaultValue={addressLine1}
+                    onChange={event => setAddressLine1(event.target.value)}
+                    isValid={isFormValidated && isAddressLine1Valid()}
+                    isInvalid={isFormValidated && !isAddressLine1Valid()}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    We can't deliver without an address
+                  </Form.Control.Feedback>
+                </Form.Group>
+                <br />
 
-              <Form.Label>Address Line 2</Form.Label>
-              <Form.Control
-                as={"input"}
-                value={addressLine2}
-                onChange={event => setAddressLine2(event.target.value)}
-              />
-              <br />
+                <Form.Group controlId="formGroupAddressLine2" style={{width: "100%"}}>
+                  <Form.Label>Address Line 2</Form.Label>
+                  <Form.Control
+                    as={"input"}
+                    value={addressLine2}
+                    onChange={event => setAddressLine2(event.target.value)}
+                  />
+                </Form.Group>
+                <br />
 
-              <Form.Label>City</Form.Label>
-              <Form.Control
-                as={"input"}
-                value={city}
-                onChange={event => setCity(event.target.value)}
-              />
-              <br />
+                <Form.Group controlId="formGroupCity" style={{width: "100%"}}>
+                  <Form.Label>City</Form.Label>
+                  <Form.Control
+                    as={"input"}
+                    value={city}
+                    onChange={event => setCity(event.target.value)}
+                  />
+                </Form.Group>
+                <br />
 
-              <Form.Label>County</Form.Label>
-              <Form.Control
-                as={"input"}
-                value={county}
-                onChange={event => setCounty(event.target.value)}
-              />
-              <br />
+                <Form.Group controlId="formGroupCounty" style={{width: "100%"}}>
+                  <Form.Label>County</Form.Label>
+                  <Form.Control
+                    as={"input"}
+                    value={county}
+                    onChange={event => setCounty(event.target.value)}
+                  />
+                </Form.Group>
+                <br />
 
-              <Form.Label>
-                Postcode <small>(required)</small>
-              </Form.Label>
-              <Form.Control
-                as={"input"}
-                value={postCode}
-                required
-                onChange={event => setPostCode(event.target.value)}
-              />
-              <Form.Control.Feedback type="invalid">
-                We can't find your address without your postcode.
-              </Form.Control.Feedback>
+                <Form.Group controlId="formGroupPostcode" style={{width: "100%"}}>
+                  <Form.Label>
+                    Postcode <small>(required)</small>
+                  </Form.Label>
+                  <Form.Control
+                    as={"input"}
+                    value={postCode}
+                    required
+                    onChange={event => setPostCode(event.target.value)}
+                    isValid={isPostcodeValid()}
+                    isInvalid={!isPostcodeValid()}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {isEmpty(postCode)
+                        ? "We can't find your address without your postcode."
+                        : !isEmpty(postCodeError)
+                            ? postCodeError
+                            : `Your postcode is not eligible for deliveries from ${props.collectionPoint.name}.`
+                    }
+                  </Form.Control.Feedback>
+                </Form.Group>
 
-              <br />
+                <br />
               </Fragment>
           )}
 
-          <Form.Label>
-            Phone Number <small>(required)</small>
-          </Form.Label>
-          <Form.Control
-              as={"input"}
-              value={phone}
-              required
-              onChange={event => setPhone(event.target.value)}
-          />
-          <Form.Control.Feedback type="invalid">
-            We need your phone number so that we can contact you if we can't locate you.
-          </Form.Control.Feedback>
+            <Form.Group controlId="formGroupPhone" style={{width: "100%"}}>
+              <Form.Label>
+                Phone Number <small>(required)</small>
+              </Form.Label>
+              <Form.Control
+                  as={"input"}
+                  value={phone}
+                  required
+                  onChange={event => setPhone(event.target.value)}
+                  isValid={isFormValidated && isPhoneNumberValid()}
+                  isInvalid={isFormValidated && !isPhoneNumberValid()}
+              />
+              <Form.Control.Feedback type="invalid">
+                We need your phone number so that we can contact you if we can't locate you.
+              </Form.Control.Feedback>
+            </Form.Group>
+
           <br />
           </View>
         </ThemedCard>
@@ -356,15 +407,18 @@ const CreateOrderView = (props: Props) => {
     if (collectionPointTimes === null) {
       return <Error>Could not load collection times.</Error>;
     }
-    const selectItems = collectionPointTimes
-      .filter(timeslot => timeslot.type === "user_pickup")
-      .map((collectionPointTime, i) => {
-      return (
-        <option key={collectionPointTime.id} value={i}>
-          {collectionPointTime.start_time}
-        </option>
-      );
-    });
+
+    const timeSlotType = isCollection ? PICKUP_COLLECTION_KEY : PICKUP_DELIVERY_KEY;
+
+    const selectItems = collectionPointTimes.filter(
+        timeslot => timeslot.type === timeSlotType).
+        map((collectionPointTime, i) => {
+          return (
+              <option key={collectionPointTime.id} value={i}>
+                {collectionPointTime.start_time}
+              </option>
+          );
+        });
     return (
       <Fragment>
         <ThemedCard>
@@ -400,7 +454,7 @@ const CreateOrderView = (props: Props) => {
     } else {
       return (
         <Fragment>
-          <Form ref={formRef} validated={isFormValidated}>
+          <Form ref={formRef} noValidate style={{width: "100%"}}>
             {renderCollectionCenterDetailsPanel()}
 
             {renderIftarPacksOptionPanel()}
