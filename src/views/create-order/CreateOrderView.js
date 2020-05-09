@@ -283,20 +283,18 @@ const CreateOrderView = (props: Props) => {
 
                 <br />
 
-                <Form.Group>
-                  <Form.Label>
-                    Address Line 1 <small>(required)</small>
-                  </Form.Label>
-                  <Form.Control
-                    type="text"
-                    required
-                    defaultValue={addressLine1}
-                    onChange={event => setAddressLine1(event.target.value)}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    We can't deliver without an address
-                  </Form.Control.Feedback>
-                </Form.Group>
+                <Form.Label>
+                  Address Line 1 <small>(required)</small>
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  required
+                  defaultValue={addressLine1}
+                  onChange={event => setAddressLine1(event.target.value)}
+                />
+                <Form.Control.Feedback type="invalid">
+                  We can't deliver without an address
+                </Form.Control.Feedback>
                 <br />
 
                 <Form.Label>Address Line 2</Form.Label>
@@ -323,46 +321,42 @@ const CreateOrderView = (props: Props) => {
                 />
                 <br />
 
-                <Form.Group>
-                  <Form.Label>
-                    Postcode <small>(required)</small>
-                  </Form.Label>
-                  <Form.Control
-                    as={"input"}
-                    value={postCode}
-                    required
-                    onChange={event => setPostCode(event.target.value)}
-                    isValid={(!isEmpty(postCode) ? isPostCodeValidForDelivery : null)}
-                    isInvalid={(!isEmpty(postCode) ? !isPostCodeValidForDelivery : null)}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {isEmpty(postCode)
-                        ? "We can't find your address without your postcode."
-                        : !isEmpty(postCodeError)
-                            ? postCodeError
-                            : `Your postcode is not eligible for deliveries from ${props.collectionPoint.name}.`
-                    }
-                  </Form.Control.Feedback>
-                </Form.Group>
+                <Form.Label>
+                  Postcode <small>(required)</small>
+                </Form.Label>
+                <Form.Control
+                  as={"input"}
+                  value={postCode}
+                  required
+                  onChange={event => setPostCode(event.target.value)}
+                  isValid={(!isEmpty(postCode) ? isPostCodeValidForDelivery : null)}
+                  isInvalid={(!isEmpty(postCode) ? !isPostCodeValidForDelivery : null)}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {isEmpty(postCode)
+                      ? "We can't find your address without your postcode."
+                      : !isEmpty(postCodeError)
+                          ? postCodeError
+                          : `Your postcode is not eligible for deliveries from ${props.collectionPoint.name}.`
+                  }
+                </Form.Control.Feedback>
 
                 <br />
               </Fragment>
           )}
 
-            <Form.Group>
-              <Form.Label>
-                Phone Number <small>(required)</small>
-              </Form.Label>
-              <Form.Control
-                  as={"input"}
-                  value={phone}
-                  required
-                  onChange={event => setPhone(event.target.value)}
-              />
-              <Form.Control.Feedback type="invalid">
-                We need your phone number so that we can contact you if we can't locate you.
-              </Form.Control.Feedback>
-            </Form.Group>
+          <Form.Label>
+            Phone Number <small>(required)</small>
+          </Form.Label>
+          <Form.Control
+              as={"input"}
+              value={phone}
+              required
+              onChange={event => setPhone(event.target.value)}
+          />
+          <Form.Control.Feedback type="invalid">
+            We need your phone number so that we can contact you if we can't locate you.
+          </Form.Control.Feedback>
 
           <br />
           </View>
