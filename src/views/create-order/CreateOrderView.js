@@ -89,7 +89,9 @@ const CreateOrderView = (props: Props) => {
   }, 500, [postCode]);
 
   function onOrderSubmit() {
-    if (formRef.current.checkValidity() === true && isAddressLine1Valid() && isDietaryValid() && isPostcodeValid()) {
+
+    const isValidForDelivery = isAddressLine1Valid() && isPostcodeValid();
+    if (formRef.current.checkValidity() === true && isDietaryValid() && (isCollection || isValidForDelivery)) {
       logger.info("formRef", formRef);
       logger.info("success validation");
       const order = createOrderCreation();
