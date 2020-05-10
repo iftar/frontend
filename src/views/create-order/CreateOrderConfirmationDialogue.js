@@ -265,5 +265,6 @@ function createOrderRequest(orderCreation: OrderCreation) {
   orderServerRequest.city = orderCreation.city;
   orderServerRequest.county = orderCreation.county;
   orderServerRequest.post_code = orderCreation.post_code;
+  orderServerRequest.notes = orderCreation.notes;
   return orderServerRequest;
 }
