@@ -15,7 +15,7 @@
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.15",
     "moment": "^2.24.0",
-    "moment-timezone": "^0.5.28",
+    "moment-timezone": "^0.5.35",
     "rc-tween-one": "^2.6.8",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.0",
